@@ -1,11 +1,23 @@
 Package: msdata2
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
+Title: WData accompanying the Benchmarking package
+Version: 0.0.0.9000
+Author: Chong Tang
+Maintainer: Chong Tang <chong.tang.mat@gmail.com>
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: Mass-spectrometry based spatial proteomics data sets and
+    protein complex separation data for benchmarking.
+Imports: 
+    Biobase,
+    methods,
+    utils
+Suggests: 
+    BiocStyle, 
+    knitr, 
+    rmarkdown,
+    testthat
+URL: https://github.com/UCLouvain-CBIO/msdata2
+BugReports: https://github.com/UCLouvain-CBIO/msdata2/issues
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
