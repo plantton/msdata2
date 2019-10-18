@@ -1,10 +1,9 @@
 Package: msdata2
 Type: Package
-Title: WData accompanying the Benchmarking package
+Title: Data accompanying the Benchmarking package
 Version: 0.0.0.9000
 Author: Chong Tang
 Maintainer: Chong Tang <chong.tang.mat@gmail.com>
-Maintainer: The package maintainer <yourself@somewhere.net>
 Description: Mass-spectrometry based spatial proteomics data sets and
     protein complex separation data for benchmarking.
 Imports: 
