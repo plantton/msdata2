@@ -6,35 +6,35 @@ library("SWATH2stats")
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 sgshumantxtfile <- "../../inst/extdata/OpenSWATH_SM3_GoldStandardAutomatedResults_human_peakgroups.txt"
 sgshumantxt <- read.delim(sgshumantxtfile)
-# import 422 stable isotope-labeled standard (SIS) peptides data
+## import 422 stable isotope-labeled standard (SIS) peptides data
 sispeptidefile <- "../extdata/NBT-L30171D-OpenSWATH_SM2_GoldStandardPeptides.csv"
 sis.peptides <- read.csv(sispeptidefile,sep=";")
 
-#
+
 rownames(sgshumantxt) <- gsub("AQUA4SWATH_(.*)/2_run0_split_napedro_(.*)_SW_combined.*",
                               "\\1_\\2_", sgshumantxt$transition_group_id)
 
 
-# Import the entire data matrix as MsnSet - assayData
-# Note: "transition_group_id", "id" is unique for each row
-#       "filename" contains 30 different strings. - Check SGS data description.
-#       "Sequence", "FullPeptideName" ,"aggr_Fragment_Annotation" contain 345 different levels/numbers.
-#       "ProteinName" contains 16 different levels.
-# Attention: As suggested by "SWATH2stats":
-#             For some R packages such as  imsbInfer,
-#             All the columns should be preserved.
-#             Hence I will keep all the columns from the OpenSWATH results.
+## Import the entire data matrix as MsnSet - assayData
+## Note: "transition_group_id", "id" is unique for each row
+##       "filename" contains 30 different strings. - Check SGS data description.
+##       "Sequence", "FullPeptideName" ,"aggr_Fragment_Annotation" contain 345 different levels/numbers.
+##       "ProteinName" contains 16 different levels.
+## Attention: As suggested by "SWATH2stats":
+##             For some R packages such as  imsbInfer,
+##             All the columns should be preserved.
+##             Hence I will keep all the columns from the OpenSWATH results.
 e.sgs.human <- readMSnSet2(file = sgshumantxt, ecol = 1:54)
 
 ## Create a "Study design" table for experimental design description
 Study_design.sgs.human <- data.frame(Filename = unique(sgshumantxt$filename))
-# Add "Condition" column: Control vs Disease
-# "Condition" represents different dilution steps
+## Add "Condition" column: Control vs Disease
+## "Condition" represents different dilution steps
 Study_design.sgs.human$Condition <- gsub(".*_(.*)_SW.*", "\\1", Study_design.sgs.human$Filename)
-# "BioReplicate" column
+## "BioReplicate" column
 Study_design.sgs.human$BioReplicate <- factor(gsub(".*_(.*)_0.*", "\\1", Study_design.sgs.human$Filename))
 levels(Study_design.sgs.human$BioReplicate) <- seq(nlevels(Study_design.sgs.human$BioReplicate))
-# "Run" column:
+## "Run" column:
 Study_design.sgs.human$Run <- seq_along(Study_design.sgs.human$Filename)
 
 
@@ -65,7 +65,7 @@ experiment <- new("MIAPE",
 e <- exprs(e.sgs.human)
 
 ## Experiment info
-# nrow(phenoData) == 54 == dim(e)[2]
+## nrow(phenoData) == 54 == dim(e)[2]
 toName <- paste0(colnames(e))
 colnames(e) <- toName
 pd <- data.frame(toName,
@@ -83,14 +83,14 @@ fd$sortslot <- seq_along(fd$sequence)
 fd <- merge(x = fd, y = sis.peptides, by = "sequence", all.x = TRUE)
 # Sort "fd" by "sort slot" column
 
-# Annotate featureData with Study_Design table: Study_design.sgs.human
+## Annotate featureData with Study_Design table: Study_design.sgs.human
 fd <- merge(x = fd, y = Study_design.sgs.human, by = "Filename", all.x = TRUE)
 fd <- fd[order(fd$sortslot),]
 rownames(fd) <- rownames(sgshumantxt)
 fd$sortslot <- NULL
 fd <- new("AnnotatedDataFrame", fd)
 
-# The "MSnProcess" Class
+## The "MSnProcess" Class
 process <- new("MSnProcess",
                processing=c(
                  paste("Loaded on ",date(),".",sep=""),
@@ -102,7 +102,8 @@ Rost2014sgs <- new("MSnSet",
                       exprs = e,
                       phenoData = pd,
                       experimentData = experiment,
-                      featureData = fd)
+                      featureData = fd,
+                      processingData = process)
 
 
 
@@ -110,7 +111,7 @@ Rost2014sgs <- new("MSnSet",
 stopifnot(dim(pData(Rost2014sgs))[1] == ncol(e),
           dim(fData(Rost2014sgs))[1] == nrow(e),
           validObject(Rost2014sgs))
-#
+
 save(Rost2014sgs, file="../../data/Rost2014Humansgs.rda",
      compress = "xz", compression_level = 9)
 
