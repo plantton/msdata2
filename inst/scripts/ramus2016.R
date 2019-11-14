@@ -61,14 +61,14 @@ process1 <- new("MSnProcess",
                normalised=FALSE)
 
 ##
-ramus2015SCMfPaQ <- new("MSnSet",
+ramus2016SCMfPaQ <- new("MSnSet",
                           exprs = e1,
                           phenoData = pd1,
                           experimentData = experiment1,
                           featureData = fd1,
                           processingData = process1)
 
-stopifnot(validObject(ramus2015SCMfPaQ))
+stopifnot(validObject(ramus2016SCMfPaQ))
 
 ## Data 2: SC MaxQuant
 workflow2 <- readMSnSet2(file = exdata.2, ecol = 5:10)
@@ -115,14 +115,14 @@ process2 <- new("MSnProcess",
                 normalised=FALSE)
 
 ##
-ramus2015SCMaxQuant <- new("MSnSet",
+ramus2016SCMaxQuant <- new("MSnSet",
                         exprs = e2,
                         phenoData = pd2,
                         experimentData = experiment2,
                         featureData = fd2,
                         processingData = process2)
 
-stopifnot(validObject(ramus2015SCMaxQuant))
+stopifnot(validObject(ramus2016SCMaxQuant))
 
 ## Data 3: SC Irma-Heidi
 workflow3 <- readMSnSet2(file = exdata.3, ecol = 5:10)
@@ -169,14 +169,14 @@ process3 <- new("MSnProcess",
                 normalised=FALSE)
 
 ##
-ramus2015SCIrmaHeidi <- new("MSnSet",
+ramus2016SCIrmaHeidi <- new("MSnSet",
                            exprs = e3,
                            phenoData = pd3,
                            experimentData = experiment3,
                            featureData = fd3,
                            processingData = process3)
 
-stopifnot(validObject(ramus2015SCIrmaHeidi))
+stopifnot(validObject(ramus2016SCIrmaHeidi))
 
 ## Data 4: SC Irma-Heidi
 workflow3 <- readMSnSet2(file = exdata.3, ecol = 5:10)
@@ -223,12 +223,14 @@ process3 <- new("MSnProcess",
                 normalised=FALSE)
 
 ##
-ramus2015SCIrmaHeidi <- new("MSnSet",
+ramus2016SCIrmaHeidi <- new("MSnSet",
                             exprs = e3,
                             phenoData = pd3,
                             experimentData = experiment3,
                             featureData = fd3,
                             processingData = process3)
 
-stopifnot(validObject(ramus2015SCIrmaHeidi))
+stopifnot(validObject(ramus2016SCIrmaHeidi))
+
+
 
