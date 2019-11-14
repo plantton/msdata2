@@ -68,7 +68,9 @@ ramus2016SCMfPaQ <- new("MSnSet",
                           featureData = fd1,
                           processingData = process1)
 
-stopifnot(validObject(ramus2016SCMfPaQ))
+stopifnot(dim(pData(ramus2016SCMfPaQ))[1] == ncol(e1),
+          dim(fData(ramus2016SCMfPaQ))[1] == nrow(e1),
+          validObject(ramus2016SCMfPaQ))
 
 ## Data 2: SC MaxQuant
 workflow2 <- readMSnSet2(file = exdata.2, ecol = 5:10)
@@ -107,7 +109,7 @@ names(fd2) <- c(names(fd2)[1:8],"Filtering 1", "Filtering 2",
                 "Filtering 3", "BH rank")
 fd2 <- new("AnnotatedDataFrame", fd2)
 
-# The "MSnProcess" Class
+## The "MSnProcess" Class
 process2 <- new("MSnProcess",
                 processing=c(
                   paste("Loaded on ",date(),".", sep=""),
@@ -122,7 +124,10 @@ ramus2016SCMaxQuant <- new("MSnSet",
                         featureData = fd2,
                         processingData = process2)
 
-stopifnot(validObject(ramus2016SCMaxQuant))
+stopifnot(dim(pData(ramus2016SCMaxQuant))[1] == ncol(e2),
+          dim(fData(ramus2016SCMaxQuant))[1] == nrow(e2),
+          validObject(ramus2016SCMaxQuant))
+
 
 ## Data 3: SC Irma-Heidi
 workflow3 <- readMSnSet2(file = exdata.3, ecol = 5:10)
@@ -161,7 +166,7 @@ names(fd3) <- c(names(fd3)[1:8],"Filtering 1", "Filtering 2",
                 "Filtering 3", "BH rank")
 fd3 <- new("AnnotatedDataFrame", fd3)
 
-# The "MSnProcess" Class
+## The "MSnProcess" Class
 process3 <- new("MSnProcess",
                 processing=c(
                   paste("Loaded on ",date(),".", sep=""),
@@ -176,13 +181,16 @@ ramus2016SCIrmaHeidi <- new("MSnSet",
                            featureData = fd3,
                            processingData = process3)
 
-stopifnot(validObject(ramus2016SCIrmaHeidi))
+stopifnot(dim(pData(ramus2016SCIrmaHeidi))[1] == ncol(e3),
+          dim(fData(ramus2016SCIrmaHeidi))[1] == nrow(e3),
+          validObject(ramus2016SCIrmaHeidi))
 
-## Data 4: SC Irma-Heidi
-workflow3 <- readMSnSet2(file = exdata.3, ecol = 5:10)
+
+## Data 4: SC Scaffold
+workflow4 <- readMSnSet2(file = exdata.4, ecol = 5:10)
 
 ## Experiment info
-experiment3 <- new("MIAPE",
+experiment4 <- new("MIAPE",
                    samples = list(
                      species = c("Human","Yeast")
                    ),
@@ -195,42 +203,57 @@ experiment3 <- new("MIAPE",
                    ionSource = "ESI",
                    analyser = "Orbitrap",
                    detectorType = "Orbitrap",
-                   softwareName = c("Mascot Distiller", "Mascot", "IRMa/hEIDI")
+                   softwareName = c("ExtractMSn", "Mascot", "Scaffold")
 )
 
 ## combine {BiocGenerics} **
 ## Expression data
-e3 <- exprs(workflow3)
+e4 <- exprs(workflow4)
 
 ## Experiment info
-pd3 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
+pd4 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
                   Concentration.Level = c(rep('A',3),rep('B', 3)) ,
                   Quantification.Method = "Spectral counting",
-                  row.names=colnames(e3))
-pd3 <- new("AnnotatedDataFrame", pd3)
+                  row.names=colnames(e4))
+pd4 <- new("AnnotatedDataFrame", pd4)
 
 ## feature data
-fd3 <- fData(workflow3)
-names(fd3) <- c(names(fd3)[1:8],"Filtering 1", "Filtering 2",
+fd4 <- fData(workflow4)
+names(fd4) <- c(names(fd4)[1:8],"Filtering 1", "Filtering 2",
                 "Filtering 3", "BH rank")
-fd3 <- new("AnnotatedDataFrame", fd3)
+fd4 <- new("AnnotatedDataFrame", fd4)
 
-# The "MSnProcess" Class
-process3 <- new("MSnProcess",
+## The "MSnProcess" Class
+process4 <- new("MSnProcess",
                 processing=c(
                   paste("Loaded on ",date(),".", sep=""),
                   paste("No Normalisation")),
                 normalised=FALSE)
 
 ##
-ramus2016SCIrmaHeidi <- new("MSnSet",
-                            exprs = e3,
-                            phenoData = pd3,
-                            experimentData = experiment3,
-                            featureData = fd3,
-                            processingData = process3)
+ramus2016SCScaffold <- new("MSnSet",
+                            exprs = e4,
+                            phenoData = pd4,
+                            experimentData = experiment4,
+                            featureData = fd4,
+                            processingData = process4)
 
-stopifnot(validObject(ramus2016SCIrmaHeidi))
+stopifnot(dim(pData(ramus2016SCScaffold))[1] == ncol(e4),
+          dim(fData(ramus2016SCScaffold))[1] == nrow(e4),
+          validObject(ramus2016SCScaffold))
+
+save(ramus2016SCMfPaQ, file="../../data/ramus2016SCMfPaQ.rda",
+     compress = "xz", compression_level = 9)
+
+save(ramus2016SCMaxQuant, file="../../data/ramus2016SCMaxQuant.rda",
+     compress = "xz", compression_level = 9)
+
+save(ramus2016SCIrmaHeidi, file="../../data/ramus2016SCIrmaHeidi.rda",
+     compress = "xz", compression_level = 9)
+
+save(ramus2016SCScaffold, file="../../data/ramus2016SCScaffold.rda",
+     compress = "xz", compression_level = 9)
+
 
 
 
