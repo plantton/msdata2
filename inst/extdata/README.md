@@ -10,3 +10,4 @@ The following file is downloaded from the supplementary data `1-s2.0-S1874391915
 TODO: convert `xlsx` format to `csv` format to facillitate R processing.
 Label-free quantification is performed across 10 fractions.
 
+For Spectral Sounting workflows - workflows 1 to 4, only unnormalised data will be provided.

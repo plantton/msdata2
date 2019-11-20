@@ -242,6 +242,7 @@ stopifnot(dim(pData(ramus2016SCScaffold))[1] == ncol(e4),
           dim(fData(ramus2016SCScaffold))[1] == nrow(e4),
           validObject(ramus2016SCScaffold))
 
+## For Spectral Sounting data, only raw data provided.
 save(ramus2016SCMfPaQ, file="../../data/ramus2016SCMfPaQ.rda",
      compress = "xz", compression_level = 9)
 
