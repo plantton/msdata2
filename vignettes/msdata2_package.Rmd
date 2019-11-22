@@ -1,0 +1,33 @@
+---
+title: "msdata2 package"
+author: "Chong Tang"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{msdata2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Introduction
+
+# Setup
+
+# Datasets
+
+# Handling Expression data
+
+# Importing data
+## Load data
+## Exploring the data
+
+# Contribution guidelines
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(msdata2)
+```
