@@ -197,7 +197,7 @@ stopifnot(dim(pData(Rost2014sgsHuman))[1] == ncol(e),
           dim(fData(Rost2014sgsHuman))[1] == nrow(e),
           validObject(Rost2014sgsHuman))
 
-save(Rost2014sgsHuman, file="../../data/Rost2014Humansgs.rda",
+save(Rost2014sgsHuman, file="../../data/Rost2014sgsHuman.rda",
    compress = "xz", compression_level = 9)
 
 ## Diagnostic plots
