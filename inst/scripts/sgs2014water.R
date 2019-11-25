@@ -186,19 +186,19 @@ process <- new("MSnProcess",
                normalised=FALSE)
 
 
-Rost2014sgs <- new("MSnSet",
+Rost2014sgsWater <- new("MSnSet",
                    exprs = e,
                    phenoData = pd,
                    experimentData = experiment,
                    featureData = f.df,
                    processingData = process)
 ## Normalise
-#  Rost2014sgs <- normalise(Rost2014sgs, method = "sum")
+#  Rost2014sgsWater <- normalise(Rost2014sgsWater, method = "sum")
 
 ## checks
-stopifnot(dim(pData(Rost2014sgs))[1] == ncol(e),
-          dim(fData(Rost2014sgs))[1] == nrow(e),
-          validObject(Rost2014sgs))
+stopifnot(dim(pData(Rost2014sgsWater))[1] == ncol(e),
+          dim(fData(Rost2014sgsWater))[1] == nrow(e),
+          validObject(Rost2014sgsWater))
 
-save(Rost2014sgs, file="../../data/Rost2014Watersgs.rda",
+save(Rost2014sgsWater, file="../../data/Rost2014Watersgs.rda",
      compress = "xz", compression_level = 9)

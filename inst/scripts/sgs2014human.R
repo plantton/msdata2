@@ -183,21 +183,21 @@ process <- new("MSnProcess",
                normalised=FALSE)
 
 
-Rost2014sgs <- new("MSnSet",
+Rost2014sgsHuman <- new("MSnSet",
                         exprs = e,
                         phenoData = pd,
                         experimentData = experiment,
                         featureData = f.df,
                         processingData = process)
 ## Normalise
-#  Rost2014sgs <- normalise(Rost2014sgs, method = "sum")
+#  Rost2014sgsHuman <- normalise(Rost2014sgsHuman, method = "sum")
 
 ## checks
-stopifnot(dim(pData(Rost2014sgs))[1] == ncol(e),
-          dim(fData(Rost2014sgs))[1] == nrow(e),
-          validObject(Rost2014sgs))
+stopifnot(dim(pData(Rost2014sgsHuman))[1] == ncol(e),
+          dim(fData(Rost2014sgsHuman))[1] == nrow(e),
+          validObject(Rost2014sgsHuman))
 
-save(Rost2014sgs, file="../../data/Rost2014Humansgs.rda",
+save(Rost2014sgsHuman, file="../../data/Rost2014Humansgs.rda",
    compress = "xz", compression_level = 9)
 
 ## Diagnostic plots
@@ -206,7 +206,7 @@ library(reshape2)
 library(ggforce)
 set.seed(123)  # Make results reproducible
 ##  Missingness
-plot.missing <- as.data.frame(base::rowSums(is.na(exprs(Rost2014sgs))))
+plot.missing <- as.data.frame(base::rowSums(is.na(exprs(Rost2014sgsHuman))))
 colnames(plot.missing) <- "MissingCount"
 ## Visualize "NA"s for each Peptide
 ## Labeled with Peptide names, and missing numbers
@@ -218,10 +218,10 @@ mp <- ggplot(data = plot.missing,
 mp + geom_label()
 
 ## Pattern among different Replicate
-plot.e <- exprs(Rost2014sgs)
-colnames(plot.e) <- pData(Rost2014sgs)$Run
+plot.e <- exprs(Rost2014sgsHuman)
+colnames(plot.e) <- pData(Rost2014sgsHuman)$Run
 plot.e <- as.data.frame(t(plot.e))
-plot.e$Run <- as.numeric(pData(Rost2014sgs)$Run)
+plot.e$Run <- as.numeric(pData(Rost2014sgsHuman)$Run)
 
 plot.run <- melt(plot.e, id.vars = 'Run', variable.name = 'Peptide')
 ## Add "BioReplicate" column
@@ -260,4 +260,4 @@ ggplot(na.omit(as.data.frame(plot.e)), aes(x = .panel_x, y = .panel_y)) +
 
 ##
 library(limma)
-limma::plotDensities(exprs(Rost2014sgs)[, c(1, 2, 11, 12, 21, 22)])  #  Batch effect
+limma::plotDensities(exprs(Rost2014sgsHuman)[, c(1, 2, 11, 12, 21, 22)])  #  Batch effect

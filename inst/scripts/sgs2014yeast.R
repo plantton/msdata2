@@ -188,19 +188,19 @@ process <- new("MSnProcess",
                normalised=FALSE)
 
 
-Rost2014sgs <- new("MSnSet",
+Rost2014sgsYeast <- new("MSnSet",
                    exprs = e,
                    phenoData = pd,
                    experimentData = experiment,
                    featureData = f.df,
                    processingData = process)
 ## Normalise
-#  Rost2014sgs <- normalise(Rost2014sgs, method = "sum")
+#  Rost2014sgsYeast <- normalise(Rost2014sgsYeast, method = "sum")
 
 ## checks
-stopifnot(dim(pData(Rost2014sgs))[1] == ncol(e),
-          dim(fData(Rost2014sgs))[1] == nrow(e),
-          validObject(Rost2014sgs))
+stopifnot(dim(pData(Rost2014sgsYeast))[1] == ncol(e),
+          dim(fData(Rost2014sgsYeast))[1] == nrow(e),
+          validObject(Rost2014sgsYeast))
 
-save(Rost2014sgs, file="../../data/Rost2014Yeastsgs.rda",
+save(Rost2014sgsYeast, file="../../data/Rost2014Yeastsgs.rda",
      compress = "xz", compression_level = 9)
