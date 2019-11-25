@@ -1,5 +1,5 @@
 msdata2 <- function()
-  data(package = "msdata2")
+      data(package = "msdata2")
 
 
 #' Extracts relevant metadata from an \code{MSnSet} instance. See
@@ -13,9 +13,9 @@ msdata2 <- function()
 #' @aliases print.msdata2metadata
 #' @examples
 #' library("msdata2")
-#' data(Rost2014sgsHuman)
-#' data(Rost2014sgsHuman)
-##' msdata2metadata(Rost2014sgsHuman)
+#' data(Rost2014Humansgs)
+#' data(Rost2014Humansgs)
+##' msdata2metadata(Rost2014Humansgs)
 msdata2metadata <- function(x) {
   ans <- list(Species = experimentData(x)@samples$species,
               Tissue = experimentData(x)@samples$tissue,
