@@ -6,15 +6,15 @@ Author: Chong Tang
 Maintainer: Chong Tang <chong.tang.mat@gmail.com>
 Description: Mass-spectrometry based spatial proteomics data sets and
     protein complex separation data for benchmarking.
-Imports: 
+Imports:
     Biobase,
     methods,
     utils
-Suggests: 
-    knitr, 
+Suggests:
+    knitr,
     rmarkdown,
     testthat
-Depends: R (>= 2.10), MSnbase
+Depends: R (>= 3.5.0), MSnbase
 URL: https://github.com/UCLouvain-CBIO/msdata2
 BugReports: https://github.com/UCLouvain-CBIO/msdata2/issues
 License: GPL-2
