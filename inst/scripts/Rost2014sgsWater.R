@@ -200,5 +200,5 @@ stopifnot(dim(pData(Rost2014sgsWater))[1] == ncol(e),
           dim(fData(Rost2014sgsWater))[1] == nrow(e),
           validObject(Rost2014sgsWater))
 
-save(Rost2014sgsWater, file="../../data/Rost2014Watersgs.rda",
+save(Rost2014sgsWater, file="../../data/Rost2014sgsWater.rda",
      compress = "xz", compression_level = 9)
