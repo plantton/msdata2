@@ -42,9 +42,10 @@ unique(fData(Rost2014sgsHuman)$ProteinName)
 
 
 Filenames:
-```{r, include = TRUE}
+
+```{r, include = TRUE, results = "asis"}
 library(msdata2)
-pData(Rost2014sgsHuman)[1:5,1]
+pander::pandoc.table(pData(Rost2014sgsHuman)[1:30,2:4], row.names = F)
 ```
 Data Visualization:
 ```{r, include = TRUE}
@@ -94,12 +95,41 @@ pairs(exprs(Rost2014sgsHuman)[, c(1, 10, 11, 20, 21, 30)])
 ```
 
 
-# Density plots
-```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+##### Density plots
+```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height= 7, warning = FALSE, message = FALSE}
 library(limma)
 limma::plotDensities(exprs(Rost2014sgsHuman)[, c(1, 10, 11, 20, 21, 30)], legend = "topright") 
 ```
 
+Peptide Count for each Protein
+```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+df.pro <- as.data.frame(table(fData(Rost2014sgsHuman)$ProteinName))
+colnames(df.pro) <- c('Protein', 'Freq')
+df.pro$Protein <- gsub(".*_", "", df.pro$Protein)
+p.pro <- ggplot(df.pro, aes(x=Protein, y = Freq)) + 
+                  geom_bar(stat="identity")
+p.pro + coord_flip()
+```
+
+#### PCA plot
+Performs a principal components analysis on the given expression dataset.
+```{r, include=TRUE, results = "hide", fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+library(factoextra)
+combineFeatures(filterNA(Rost2014sgsHuman), fcol = "ProteinName", method = "robust")
+fData(Rost2014sgsHuman)$prot <- fData(Rost2014sgsHuman)$ProteinName
+prot <- combineFeatures(filterNA(Rost2014sgsHuman), fcol = "prot", method = "robust")
+p2 <- prcomp(t(exprs(prot)), scale = TRUE, center = TRUE)
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate)
+```
+
+```{r, include=TRUE, fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate, geom="point")
+```
+
+##
+```{r, include=TRUE, fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$Condition, geom="point")
+```
 
 # Contribution guidelines
 
