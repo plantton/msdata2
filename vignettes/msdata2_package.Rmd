@@ -1,0 +1,138 @@
+---
+title: "msdata2 package"
+author: "Chong Tang"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{msdata2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Introduction
+The `msdata2` package mainly contains a set of public accessible label-free Proteomics datasets. The purpose of this data package is to provide cleaned, formatted, compressed and extensible proteomics datasets to the research community.  
+Moreover, this package will also be built as a benchmarking data repository, which provides standard and curated datasets to facilitate the benchmarking of different quanfitication workflows.
+
+# Datasets
+The package contains the following datasets:    
+    I. Raw MS datasets:    
+    II. Expression Results:  
+        -  DIA/SWATH-MS:  
+            * SWATH-MS Gold Standard Dataset  
+            * OpenSWATH Spyogenes Dataset  
+        -  Label-free quantification:  
+            *  Yeast + UPS1 spiked datasets X8  
+To list all the datasets in the package, use `msdata2()`.  
+
+# Handling Expression data
+
+
+# Importing data
+## Load data
+```{r, include = TRUE, results = "hide", warning = FALSE, message = FALSE}
+library(msdata2)
+```
+## Exploring the data
+Datasets in the package:
+```{r, include=TRUE, warning = FALSE, message = FALSE}
+msdata2()
+```
+Proteins in the experiment:
+```{r, include=TRUE, warning = FALSE, message = FALSE}
+unique(fData(Rost2014sgsHuman)$ProteinName)
+```
+
+
+Filenames:
+
+```{r, include = TRUE, results = "asis"}
+library(msdata2)
+pander::pandoc.table(pData(Rost2014sgsHuman)[1:30,2:4], row.names = F)
+```
+Data Visualization:
+```{r, include = TRUE}
+library(ggplot2)
+library(reshape2)
+library(ggforce)
+```
+
+Missingness plot in the expression data:
+```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+naplot(Rost2014sgsHuman)
+```
+
+Missingness in Expression data:
+```{r, include=TRUE}
+  table(rowSums(is.na(exprs(Rost2014sgsHuman))))
+```
+
+Peptide pattern among 3 BioReplicates:
+```{r, include=TRUE, fig.show='asis',fig.width=8, warning = FALSE, message = FALSE}
+plot.e <- exprs(Rost2014sgsHuman)
+colnames(plot.e) <- pData(Rost2014sgsHuman)$Run
+plot.e <- as.data.frame(t(plot.e))
+plot.e$Run <- as.numeric(pData(Rost2014sgsHuman)$Run)
+
+plot.run <- melt(plot.e, id.vars = 'Run', variable.name = 'Peptide')
+## Add "BioReplicate" column
+plot.run$BioReplicate <- cut(plot.run$Run,
+                             breaks = c(0, 10, 20, 30),
+                             labels = c(1,2,3))
+plot.run$Condition <- rep(1:10,3)
+
+##
+Rep.labs <- c(`1`="BioReplicate 1", `2` = "BioReplicate 2", `3` = "BioReplicate 3")
+p <-ggplot(plot.run, aes(x = Condition, y = value, fill=BioReplicate) ) +
+                scale_x_continuous(breaks = seq(1:10)) +
+                geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE, show.legend = FALSE, color="darkred") +
+                geom_boxplot(aes(group = Run), alpha = 0.5) +
+                facet_grid(.~BioReplicate, labeller = as_labeller(Rep.labs)) +
+                theme(strip.text.x = element_text(size=9, color="black", face="bold"))
+p
+```
+
+Correlation between different runs:
+```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height=5, warning = FALSE, message = FALSE}
+pairs(exprs(Rost2014sgsHuman)[, c(1, 10, 11, 20, 21, 30)]) 
+```
+
+
+##### Density plots
+```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height= 7, warning = FALSE, message = FALSE}
+library(limma)
+limma::plotDensities(exprs(Rost2014sgsHuman)[, c(1, 10, 11, 20, 21, 30)], legend = "topright") 
+```
+
+Peptide Count for each Protein
+```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+df.pro <- as.data.frame(table(fData(Rost2014sgsHuman)$ProteinName))
+colnames(df.pro) <- c('Protein', 'Freq')
+df.pro$Protein <- gsub(".*_", "", df.pro$Protein)
+p.pro <- ggplot(df.pro, aes(x=Protein, y = Freq)) + 
+                  geom_bar(stat="identity")
+p.pro + coord_flip()
+```
+
+#### PCA plot
+Performs a principal components analysis on the given expression dataset.
+```{r, include=TRUE, results = "hide", fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+library(factoextra)
+combineFeatures(filterNA(Rost2014sgsHuman), fcol = "ProteinName", method = "robust")
+fData(Rost2014sgsHuman)$prot <- fData(Rost2014sgsHuman)$ProteinName
+prot <- combineFeatures(filterNA(Rost2014sgsHuman), fcol = "prot", method = "robust")
+p2 <- prcomp(t(exprs(prot)), scale = TRUE, center = TRUE)
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate)
+```
+
+```{r, include=TRUE, fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate, geom="point")
+```
+
+##
+```{r, include=TRUE, fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$Condition, geom="point")
+```
+
+# Contribution guidelines
+
+
+
+
