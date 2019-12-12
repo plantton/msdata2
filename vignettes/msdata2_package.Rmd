@@ -137,12 +137,14 @@ fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate)
 ```
 
 ```{r, include=TRUE, fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
-fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate, geom="point")
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$BioReplicate, geom="point",
+             addEllipses=TRUE, ellipse.level=0.95)
 ```
 
 ##
 ```{r, include=TRUE, fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
-fviz_pca_ind(p2, habillage = Rost2014sgsHuman$Condition, geom="point")
+fviz_pca_ind(p2, habillage = Rost2014sgsHuman$Condition, geom="point",
+             addEllipses=TRUE, ellipse.level=0.95, palette =  "ucscgb")
 ```
 
 # Contribution guidelines

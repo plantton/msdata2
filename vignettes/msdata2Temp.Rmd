@@ -1,0 +1,58 @@
+---
+title: "msdata2: Various Quantification Proteomics Datasets For Benchmarking"
+author: |
+   Chong Tang, Laurent Gatto.  
+   de Duve Institute - UCLouvain, Avenue Hippocrate 75, 1200 Brussels, Belgium.  
+output:
+  drposter::drposter_poster:
+    self_contained: false
+    css: custom.css
+bibliography: bibliography.bib
+csl: bioinformatics.csl   
+---
+
+# {.col-1}
+
+## Introduction
+
+The `msdata2` package mainly contains a set of public accessible quantitative proteomics datasets. The purpose of this package is to provide standard and curated datasets to facilitate the benchmarking work of different identification/quantitative proteomics workflows. Besides aiding benchmarks, `msdata2` will also be built as a collection of cleaned, formatted, compressed and extensible proteomics datasets for the research community. We hope `msdata2` can also help the other researchers to fulfill their own research interests, as well as other educational or training purposes. Currently, `msdata2` mainly consists of analysis results from proteomics workflows. The analysis output has been converted into standard `MSnSet` object format.
+
+The first dataset in `msdata2` is OpenSWATH output from SGS dataset. The The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic stable isotope-labeled standard (SIS) peptides in ten different dilution steps, spiked into three protein backgrounds of varying complexity (water, yeast and human), acquired in three technical replicates. The SGS dataset was manually annotated, resulting in 342 identified and quantified peptides with three or four transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated with one true peak group, whereas in 11,995 cases no peak was detected [@Rost2014vh].  
+
+
+![](DS3.png)
+
+
+# {.col-1}
+
+## Data Manipulation
+![](workflow1-1.png)
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+# {.col-2}
+
+## Slide with R Code and Output
+
+```{r}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+# {.col-2}
+
+## Conclusions
+
+Take a look around the project example for a tour of useful column classes, etc.
+
+## References
+
