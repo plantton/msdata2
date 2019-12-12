@@ -3,42 +3,58 @@ library("readr")
 library("dplyr")
 library("tidyr")
 
+## Set workdir as the current path
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-sgshumantxtfile <- "../../inst/extdata/OpenSWATH_SM3_GoldStandardAutomatedResults_human_peakgroups.txt"
+## Read quantification results
+sgshumantxtfile <- paste("../../inst/extdata/OpenSWATH_SM3_",
+                         "GoldStandardAutomatedResults_human_peakgroups.txt",
+                         sep = "")
 sgshumantxt <- read.delim(sgshumantxtfile)
-## import 422 stable isotope-labeled standard (SIS) peptides data
-sispeptidefile <- "../extdata/NBT-L30171D-OpenSWATH_SM2_GoldStandardPeptides.csv"
-sis.peptides <- read.csv(sispeptidefile,sep=";")
-names(sis.peptides) <- c("Sequence", names(sis.peptides)[2:3])
+## import Spiked-in (SIS) peptides data
+sispeptidefile <- paste("../extdata/NBT-L30171D-OpenSWATH_SM2",
+                        "_GoldStandardPeptides.csv",
+                        sep = "")
+sisPeptides <- read.csv(sispeptidefile,sep=";")
+names(sisPeptides) <- c("Sequence", names(sisPeptides)[2:3])
 
 
-## Create a "Study design" table for experimental design description
-Study_design.sgs.human <- data.frame(filename = unique(sgshumantxt$filename))
+## Create a "Study design" table: "sdHuman" for experimental design description
+sdHuman <- data.frame(filename = unique(sgshumantxt$filename))
 ## Add "Condition" column: Control vs Disease
 ## "Condition" represents different dilution steps
-Study_design.sgs.human$Condition <- gsub(".*_(.*)_SW.*", "\\1", Study_design.sgs.human$filename)
+sdHuman$Condition <- gsub(".*_(.*)_SW.*",
+                                         "\\1",
+                                         sdHuman$filename)
 ## "BioReplicate" column
-Study_design.sgs.human$BioReplicate <- factor(gsub(".*_(.*)_0.*", "\\1", Study_design.sgs.human$filename))
-levels(Study_design.sgs.human$BioReplicate) <- seq(nlevels(Study_design.sgs.human$BioReplicate))
+sdHuman$BioReplicate <- factor(gsub(".*_(.*)_0.*",
+                                                   "\\1",
+                                                sdHuman$filename))
+levels(sdHuman$BioReplicate) <- seq(nlevels(sdHuman$BioReplicate))
 ## "Run" column:
-Study_design.sgs.human$Run <- seq_along(Study_design.sgs.human$filename)
+sdHuman$Run <- seq_along(sdHuman$filename)
 
 ## Create Peptide level aggregation data frame as Expression assay data
-## left outer join "sgshumantxt" with "sis.peptides"
+## left outer join "sgshumantxt" with "sisPeptides"
 sgshumantxt$sortslot <- seq_along(sgshumantxt$Sequence)
-sgshumantxt <- merge(x = sgshumantxt, y = sis.peptides, by = "Sequence", all.x = TRUE)
+sgshumantxt <- merge(x = sgshumantxt, y = sisPeptides,
+                     by = "Sequence",
+                     all.x = TRUE)
 ## Annotate sgs data frame with Study_Design table:
-sgshumantxt <- merge(x = sgshumantxt, y = Study_design.sgs.human, by = "filename", all.x = TRUE)
+sgshumantxt <- merge(x = sgshumantxt,
+                     y = sdHuman,
+                     by = "filename", all.x = TRUE)
 sgshumantxt <- sgshumantxt[order(sgshumantxt$sortslot),]
 ## assign rownames to the data frame
-rownames(sgshumantxt) <- gsub("AQUA4SWATH_(.*)/2_run0_split_napedro_(.*)_SW_combined.*",
-                              "\\1_\\2_", sgshumantxt$transition_group_id)
+longFileNames <- "AQUA4SWATH_(.*)/2_run0_split_napedro_(.*)_SW_combined.*"
+rownames(sgshumantxt) <- gsub(longFileNames,
+                              "\\1_\\2_",
+                              sgshumantxt$transition_group_id)
 sgshumantxt$sortslot <- NULL
 
 
 ## Column - "total_xic" as assay data, reshape the original data frame
 ## Peptide sequences existed in all 30 elution runs?
-sequence.RunOverview <- sgshumantxt %>% group_by(Sequence) %>% summarise(n())
+sqRunOverview <- sgshumantxt %>% group_by(Sequence) %>% summarise(n())
 ## Sequence: "HLDSSHPR" only detected in 25 runs
 ## Arrange the data frame: firstly group all rows on "Sequence";
 ## then arrange all rows within one "Sequence" category on "Run"
@@ -48,13 +64,14 @@ sgshumantxt <- sgshumantxt %>%
                         arrange(Sequence)
 
 ## Reshape "total_xic" to new matrix: each row represents one peptide sequence
-exprs.xic <- sgshumantxt %>%
+exprsXIC <- sgshumantxt %>%
                     select(Sequence, Run, total_xic) %>%
                     spread(Run, total_xic, fill = NA) %>%
                     as.data.frame()
-rownames(exprs.xic) <- exprs.xic$Sequence
-colnames(exprs.xic)[!names(exprs.xic) %in% "Sequence"] <- as.character(Study_design.sgs.human$filename[match(colnames(exprs.xic)[-1],
-                                                           Study_design.sgs.human$Run)])
+rownames(exprsXIC) <- exprsXIC$Sequence
+runFileNames <- as.character(sdHuman$filename[match(colnames(exprsXIC)[-1],
+                                                    sdHuman$Run)])
+colnames(exprsXIC)[!names(exprsXIC) %in% "Sequence"] <- runFileNames
 
 
 ## Reshape the dataframe as Sequence/Peptide level data
@@ -62,14 +79,12 @@ colnames(exprs.xic)[!names(exprs.xic) %in% "Sequence"] <- as.character(Study_des
 
 ## Import the entire data matrix as MsnSet - assayData
 ## Note: "transition_group_id", "id" is unique for each row
-##       "filename" contains 30 different strings. - Check SGS data description.
-##       "Sequence", "FullPeptideName" ,"aggr_Fragment_Annotation" contain 345 different levels/numbers.
+##       "filename" contains 30 different strings. -
+##           Check SGS data description.
+##       "Sequence", "FullPeptideName" ,"aggr_Fragment_Annotation"
+##           contain 345 different levels/numbers.
 ##       "ProteinName" contains 16 different levels.
-## Attention: As suggested by "SWATH2stats":
-##             For some R packages such as  imsbInfer,
-##             All the columns should be preserved.
-##             Hence I will try to keep as much info from OpenSWATH results as possible.
-e.sgs.human <- readMSnSet2(file = exprs.xic, ecol = 2:31)
+eSGSHuman <- readMSnSet2(file = exprsXIC, ecol = 2:31)
 
 ## Experimental data to add
 experiment <- new("MIAPE",
@@ -80,7 +95,10 @@ experiment <- new("MIAPE",
                   samples = list(
                     species = c("Human","Yeast","Streptococcus pyogenes")
                   ),
-                    title = "OpenSWATH enables automated, targeted analysis of data-independent acquisition MS data:SWATH-MS Gold Standard (SGS) Dataset, S. pyogenes Dataset",
+                    title = "OpenSWATH enables automated,
+                             targeted analysis of data-independent acquisition
+                             MS data:SWATH-MS Gold Standard (SGS) Dataset,
+                             S. pyogenes Dataset",
                   abstract = "The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic stable isotope-labeled standard (SIS) peptides in ten different dilution steps, spiked into three protein backgrounds of varying complexity (water, yeast and human), acquired in three technical replicates. The SGS dataset was manually annotated, resulting in 342 identified and quantified peptides with three or four transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated with one true peak group, whereas in 11,995 cases no peak was detected. See also http://www.openswath.org/openswath_data.html for details.",
                   pubMedIds = "24727770",
                   url = "http://compms.org/resources/reference-data/50",
@@ -95,11 +113,11 @@ experiment <- new("MIAPE",
 )
 
 ## Expression data
-e <- exprs(e.sgs.human)
+e <- exprs(eSGSHuman)
 
 ## Experiment info
 ## nrow(phenoData) == dim(e)[2]
-pd <- data.frame(Study_design.sgs.human,
+pd <- data.frame(sdHuman,
                  row.names=colnames(e))
 rownames(pd) <- pd$filename
 pd <- new("AnnotatedDataFrame", pd)
@@ -125,9 +143,12 @@ sgshumantxt <- sgshumantxt %>%
 
 ## Function to reshape column into data frame (fData)
 ## Create an empty assay
-toName <- colnames(sgshumantxt[,!(names(sgshumantxt) %in% c("Sequence", "Run"))])
+toName <- colnames(sgshumantxt[,!(names(sgshumantxt) %in%
+                                    c("Sequence", "Run"))])
 fd <- data.frame(toName,
-                 row.names = colnames(sgshumantxt[,!(names(sgshumantxt) %in% c("Sequence", "Run"))]))
+                 row.names = colnames(sgshumantxt[,!(names(sgshumantxt)
+                                                     %in% c("Sequence",
+                                                            "Run"))]))
 fd <- t(fd)
 
 ## Columns contains redundant info
@@ -143,20 +164,25 @@ fd <- fd[, !colnames(fd) %in% c("Charge",
                                 "picked"),  drop = FALSE]
 
 ## fData
-f.df <- array(0, dim = c(dim(e)[1], dim(fd)[2]))
-f.df <- data.frame(f.df, row.names = rownames(exprs.xic))
+fDF <- array(0, dim = c(dim(e)[1], dim(fd)[2]))
+fDF <- data.frame(fDF, row.names = rownames(exprsXIC))
 
-# colnames(f.df) <- colnames(fd)
+# colnames(fDF) <- colnames(fd)
 for (i in 1:dim(fd)[2]) {
-  i.mat <- sgshumantxt %>%
+  i_mat <- sgshumantxt %>%
     select(Sequence, Run, colnames(fd)[i]) %>%
     spread(Run, colnames(fd)[i], fill = NA)
-  f.df[, i] <- as.matrix(i.mat[, -1])
+  fDF[, i] <- as.matrix(i_mat[, -1])
 }
-colnames(f.df) <- colnames(fd)
+colnames(fDF) <- colnames(fd)
 
 ## Add redundant/repeated values
-df.1 <- sgshumantxt %>% select(Sequence, Charge, ProteinName, nr_peaks, organism, picked) %>%
+df1 <- sgshumantxt %>% select(Sequence,
+                              Charge,
+                              ProteinName,
+                              nr_peaks,
+                              organism,
+                              picked) %>%
                           group_by(Sequence) %>%
                           summarise(Charge = unique(Charge),
                                     ProteinName = unique(ProteinName),
@@ -165,14 +191,14 @@ df.1 <- sgshumantxt %>% select(Sequence, Charge, ProteinName, nr_peaks, organism
                                     picked = unique(picked)) %>%
                           arrange(Sequence) %>%
                           as.data.frame()
-rownames(df.1) <- df.1$Sequence
-# rownames(df.1) <- df.1$Sequence
-f.df <- cbind(f.df, df.1[,c("Charge",
+rownames(df1) <- df1$Sequence
+# rownames(df1) <- df1$Sequence
+fDF <- cbind(fDF, df1[,c("Charge",
                             "ProteinName",
                             "nr_peaks",
                             "organism",
-                            "picked")][match(rownames(f.df), rownames(df.1)),])
-f.df <- new("AnnotatedDataFrame", f.df)
+                            "picked")][match(rownames(fDF), rownames(df1)),])
+fDF <- new("AnnotatedDataFrame", fDF)
 
 
 ## The "MSnProcess" Class
@@ -187,7 +213,7 @@ Rost2014sgsHuman <- new("MSnSet",
                         exprs = e,
                         phenoData = pd,
                         experimentData = experiment,
-                        featureData = f.df,
+                        featureData = fDF,
                         processingData = process)
 ## Normalise
 #  Rost2014sgsHuman <- normalise(Rost2014sgsHuman, method = "sum")
@@ -211,7 +237,9 @@ colnames(plot.missing) <- "MissingCount"
 ## Visualize "NA"s for each Peptide
 ## Labeled with Peptide names, and missing numbers
 mp <- ggplot(data = plot.missing,
-             mapping = aes(x = rownames(plot.missing), MissingCount, label = rownames(plot.missing))) +
+             mapping = aes(x = rownames(plot.missing),
+                           MissingCount,
+                           label = rownames(plot.missing))) +
               geom_bar(stat='identity') +
                 theme_void() +
                   geom_text(aes(label = MissingCount), position = position_stack(vjust = 0.5))
