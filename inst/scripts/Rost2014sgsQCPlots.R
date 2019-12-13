@@ -210,3 +210,69 @@ ggplot(df) +
                        guide = guide_colorbar(order = 1)) +
   scale_x_discrete(labels = factor(df$x)) +
   labs(colour = "transformed", fill = "default", x = "", y = "")
+
+###############
+
+## Diagnostic plots
+library(ggplot2)
+library(reshape2)
+library(ggforce)
+set.seed(123)  # Make results reproducible
+##  Missingness
+plot.missing <- as.data.frame(base::rowSums(is.na(exprs(Rost2014sgsHuman))))
+colnames(plot.missing) <- "MissingCount"
+## Visualize "NA"s for each Peptide
+## Labeled with Peptide names, and missing numbers
+mp <- ggplot(data = plot.missing,
+             mapping = aes(x = rownames(plot.missing),
+                           MissingCount,
+                           label = rownames(plot.missing))) +
+  geom_bar(stat='identity') +
+  theme_void() +
+  geom_text(aes(label = MissingCount), position = position_stack(vjust = 0.5))
+mp + geom_label()
+
+## Pattern among different Replicate
+plot.e <- exprs(Rost2014sgsHuman)
+colnames(plot.e) <- pData(Rost2014sgsHuman)$Run
+plot.e <- as.data.frame(t(plot.e))
+plot.e$Run <- as.numeric(pData(Rost2014sgsHuman)$Run)
+
+plot.run <- melt(plot.e, id.vars = 'Run', variable.name = 'Peptide')
+## Add "BioReplicate" column
+plot.run$BioReplicate <- cut(plot.run$Run,
+                             breaks = c(0, 10, 20, 30),
+                             labels = c(1,2,3))
+plot.run$Condition <- rep(1:10,3)
+
+##
+Rep.labs <- c(`1`="BioReplicate 1", `2` = "BioReplicate 2", `3` = "BioReplicate 3")
+p <-ggplot(plot.run, aes(x = Condition, y = value, fill=BioReplicate) ) +
+  scale_x_continuous(breaks = seq(1:10)) +
+  geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE, show.legend = FALSE, color="darkred") +
+  geom_boxplot(aes(group = Run), alpha = 0.5) +
+  facet_grid(.~BioReplicate, labeller = as_labeller(Rep.labs)) +
+  theme(strip.text.x = element_text(size=9, color="black", face="bold"))
+p
+
+##
+plot.e$Run <- NULL
+plot.e <- t(plot.e)
+ggplot(as.data.frame(plot.e), aes(x = .panel_x, y = .panel_y)) +
+  geom_point(alpha = 0.2, shape = 16, size = 0.5) +
+  facet_matrix(vars(dplyr::select( c(1,11,21))) , layer.diag = 2)
+## Try out gganimate
+library(gganimate)
+ggplot(na.omit(as.data.frame(plot.e)), aes(x = .panel_x, y = .panel_y)) +
+  geom_point(alpha = 0.2, shape = 16, size = 0.5) +
+  geom_autodensity() +
+  facet_matrix(vars(1,5,10,11,15, 20,21,25, 30), layer.diag = 2, grid.y.diag = FALSE)
+##
+ggplot(na.omit(as.data.frame(plot.e)), aes(x = .panel_x, y = .panel_y)) +
+  geom_point(alpha = 0.2, shape = 16, size = 0.5) +
+  geom_autodensity() +
+  facet_matrix(vars(9,19,29), layer.diag = 2, grid.y.diag = FALSE)
+
+##
+library(limma)
+limma::plotDensities(exprs(Rost2014sgsHuman)[, c(1, 2, 11, 12, 21, 22)])  #  Batch effect
