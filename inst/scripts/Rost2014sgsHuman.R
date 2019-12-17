@@ -20,7 +20,7 @@ names(sisPeptides) <- c("Sequence", names(sisPeptides)[2:3])
 
 ## Create a "Study design" table: "sdHuman" for experimental design description
 sdHuman <- data.frame(filename = unique(sgshumantxt$filename))
-## Add "Condition" column: Control vs Disease
+## Add "Condition" column: serial dilution steps.
 ## "Condition" represents different dilution steps
 sdHuman$Condition <- gsub(".*_(.*)_SW.*",
                                          "\\1",
@@ -39,10 +39,11 @@ sgshumantxt$sortslot <- seq_along(sgshumantxt$Sequence)
 sgshumantxt <- merge(x = sgshumantxt, y = sisPeptides,
                      by = "Sequence",
                      all.x = TRUE)
-## Annotate sgs data frame with Study_Design table:
+## Annotate sgs data frame with Study Design table:
 sgshumantxt <- merge(x = sgshumantxt,
                      y = sdHuman,
-                     by = "filename", all.x = TRUE)
+                     by = "filename",
+                     all.x = TRUE)
 sgshumantxt <- sgshumantxt[order(sgshumantxt$sortslot),]
 ## assign rownames to the data frame
 longFileNames <- "AQUA4SWATH_(.*)/2_run0_split_napedro_(.*)_SW_combined.*"
@@ -77,7 +78,7 @@ colnames(exprsXIC)[!names(exprsXIC) %in% "Sequence"] <- runFileNames
 ## Reshape the dataframe as Sequence/Peptide level data
 ## With columns as 30 "run"s
 
-## Import the entire data matrix as MsnSet - assayData
+## Import the entire data matrix as assayData in "MSnSet" instance.
 ## Note: "transition_group_id", "id" is unique for each row
 ##       "filename" contains 30 different strings. -
 ##           Check SGS data description.
@@ -141,7 +142,7 @@ sgshumantxt <- sgshumantxt %>%
                    id,
                    BioReplicate))
 
-## Function to reshape column into data frame (fData)
+## Function to reshape columns into data frame (fData)
 ## Create an empty assay
 toName <- colnames(sgshumantxt[,!(names(sgshumantxt) %in%
                                     c("Sequence", "Run"))])
@@ -152,11 +153,11 @@ fd <- data.frame(toName,
 fd <- t(fd)
 
 ## Columns contains redundant info
-# Charge: Always 2
-#  ProteinName
-#  nr_peaks: n_distinct() == 1
-#  organism: n_distinct() == 1
-#  Picked: n_distinct() == 1
+## Charge: Always 2
+##  ProteinName
+##  nr_peaks: n_distinct() == 1
+##  organism: n_distinct() == 1
+##  Picked: n_distinct() == 1
 fd <- fd[, !colnames(fd) %in% c("Charge",
                                 "ProteinName",
                                 "nr_peaks",
@@ -167,7 +168,7 @@ fd <- fd[, !colnames(fd) %in% c("Charge",
 fDF <- array(0, dim = c(dim(e)[1], dim(fd)[2]))
 fDF <- data.frame(fDF, row.names = rownames(exprsXIC))
 
-# colnames(fDF) <- colnames(fd)
+## colnames(fDF) <- colnames(fd)
 for (i in 1:dim(fd)[2]) {
   i_mat <- sgshumantxt %>%
     select(Sequence, Run, colnames(fd)[i]) %>%
@@ -192,7 +193,7 @@ df1 <- sgshumantxt %>% select(Sequence,
                           arrange(Sequence) %>%
                           as.data.frame()
 rownames(df1) <- df1$Sequence
-# rownames(df1) <- df1$Sequence
+
 fDF <- cbind(fDF, df1[,c("Charge",
                             "ProteinName",
                             "nr_peaks",
@@ -216,7 +217,7 @@ Rost2014sgsHuman <- new("MSnSet",
                         featureData = fDF,
                         processingData = process)
 ## Normalise
-#  Rost2014sgsHuman <- normalise(Rost2014sgsHuman, method = "sum")
+## Rost2014sgsHuman <- normalise(Rost2014sgsHuman, method = "sum")
 
 ## checks
 stopifnot(dim(pData(Rost2014sgsHuman))[1] == ncol(e),
