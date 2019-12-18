@@ -8,8 +8,9 @@
 #' @references   See in the respective data sets' manual pages for references to
 #' publications.
 #' @author Chong Tang <chong.tang@@clouvain.be>
+#' @export
 
 msdata2 <- function()
-      data(package = "msdata2")
+  data(package = "msdata2")
 
 

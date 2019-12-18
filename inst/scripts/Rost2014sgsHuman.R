@@ -20,11 +20,8 @@ names(sisPeptides) <- c("Sequence", names(sisPeptides)[2:3])
 
 ## Create a "Study design" table: "sdHuman" for experimental design description
 sdHuman <- data.frame(filename = unique(sgshumantxt$filename))
-<<<<<<< HEAD
-## Add "Condition" column: Control vs Disease
-=======
+
 ## Add "Condition" column: serial dilution steps.
->>>>>>> bce9ea17ba1020de57d77e311c0fdc94993f9d92
 ## "Condition" represents different dilution steps
 sdHuman$Condition <- gsub(".*_(.*)_SW.*",
                                          "\\1",
@@ -43,18 +40,13 @@ sgshumantxt$sortslot <- seq_along(sgshumantxt$Sequence)
 sgshumantxt <- merge(x = sgshumantxt, y = sisPeptides,
                      by = "Sequence",
                      all.x = TRUE)
-<<<<<<< HEAD
-## Annotate sgs data frame with Study_Design table:
-sgshumantxt <- merge(x = sgshumantxt,
-                     y = sdHuman,
-                     by = "filename", all.x = TRUE)
-=======
+
 ## Annotate sgs data frame with Study Design table:
 sgshumantxt <- merge(x = sgshumantxt,
                      y = sdHuman,
                      by = "filename",
                      all.x = TRUE)
->>>>>>> bce9ea17ba1020de57d77e311c0fdc94993f9d92
+
 sgshumantxt <- sgshumantxt[order(sgshumantxt$sortslot),]
 ## assign rownames to the data frame
 longFileNames <- "AQUA4SWATH_(.*)/2_run0_split_napedro_(.*)_SW_combined.*"
@@ -179,11 +171,7 @@ fd <- fd[, !colnames(fd) %in% c("Charge",
 fDF <- array(0, dim = c(dim(e)[1], dim(fd)[2]))
 fDF <- data.frame(fDF, row.names = rownames(exprsXIC))
 
-<<<<<<< HEAD
-# colnames(fDF) <- colnames(fd)
-=======
 ## colnames(fDF) <- colnames(fd)
->>>>>>> bce9ea17ba1020de57d77e311c0fdc94993f9d92
 for (i in 1:dim(fd)[2]) {
   i_mat <- sgshumantxt %>%
     select(Sequence, Run, colnames(fd)[i]) %>%
@@ -208,11 +196,7 @@ df1 <- sgshumantxt %>% select(Sequence,
                           arrange(Sequence) %>%
                           as.data.frame()
 rownames(df1) <- df1$Sequence
-<<<<<<< HEAD
-# rownames(df1) <- df1$Sequence
-=======
 
->>>>>>> bce9ea17ba1020de57d77e311c0fdc94993f9d92
 fDF <- cbind(fDF, df1[,c("Charge",
                             "ProteinName",
                             "nr_peaks",
