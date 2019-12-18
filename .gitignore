@@ -3,3 +3,19 @@
 .RData
 .Ruserdata
 inst/doc
+inst/extdata
+
+## R Environment Variables
+.Renviron
+
+## temporary visualization script
+/inst/scripts/Rost2014sgsQCPlots.R
+
+## temporary Raw MS test loading script
+/inst/scripts/*Raw.R
+
+## ignore results data, compressed them in the next step
+inst/extdata
+
+## ignore documentation script
+R/docs.R

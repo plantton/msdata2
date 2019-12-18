@@ -15,5 +15,5 @@ See in the respective data sets' manual pages for references to
 publications.
 }
 \author{
-Chong Tang <chong.tang.mat@gmail.com>
+Chong Tang <chong.tang@clouvain.be>
 }
