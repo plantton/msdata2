@@ -10,18 +10,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 # Introduction
-The `msdata2` package mainly contains a set of public accessible label-free Proteomics datasets. The purpose of this data package is to provide cleaned, formatted, compressed and extensible proteomics datasets to the research community.  
-Moreover, this package will also be built as a benchmarking data repository, which provides standard and curated datasets to facilitate the benchmarking of different quanfitication workflows [@Rost2014vh].
+The `msdata2` package mainly contains a set of public accessible identification/quantitative proteomics datasets. The purpose of this data package is to provide cleaned, formatted, compressed and extensible proteomics datasets as [`MSnSet`](https://www.rdocumentation.org/packages/MSnbase/versions/1.20.7/topics/MSnSet-class) instances to the research community. Moreover, this package will also provide standard and curated datasets to facilitate the benchmarking of proteomics workflows [@Rost2014vh]. In the future, we will also include large raw MS datasets, making use of the [`ExperimentHub`](http://bioconductor.org/packages/release/bioc/html/ExperimentHub.html) cloud infrastructure.
 
-# Datasets
+# Available datasets
 The package contains the following datasets:    
     I. Raw MS datasets:    
     II. Expression Results:  
-        -  DIA/SWATH-MS:  
-            * SWATH-MS Gold Standard Dataset  
-            * OpenSWATH Spyogenes Dataset  
+    
         -  Label-free quantification:  
             *  Yeast + UPS1 spiked datasets X8  
+            *  SWATH-MS Gold Standard Dataset 
+            *  OpenSWATH Spyogenes Dataset 
+            
 To list all the datasets in the package, use `msdata2()`.  
 
 # Experimental Description
