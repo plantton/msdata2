@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 ## Temp file used to visualize data, will be removed in the package.
->>>>>>> bce9ea17ba1020de57d77e311c0fdc94993f9d92
 library("MSnbase")
 library("readr")
 library("dplyr")

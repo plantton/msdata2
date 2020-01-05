@@ -25,16 +25,16 @@ The package contains the following datasets:
 To list all the datasets in the package, use `msdata2()`.  
 
 # Experimental Description
-In this vignette, I will use one of the datasets - `Rost2014sgsHuman` as the example, to demonstrate my pacakge.  
+In this vignette, I will use one of the datasets - [`SGS GOLD STANDARD DATASET`](http://compms.org/resources/reference-data/50)  (termed SGS for SWATH-MS
+Gold Standard) as the example, to demonstrate my package. The `SGS Dataset` was initially created to validate and benchmark SWATH-MS data analysis algorithms, which consists of known composition [@Rost2014vh].  
 
-The `Rost2014sgsHuman` dataset was imported from [`SGS GOLD STANDARD DATASET`](http://compms.org/resources/reference-data/50)  (termed SGS for SWATH-MS
-Gold Standard), for the human background. The `SGS Dataset` was initially created to validate and benchmark SWATH-MS data analysis algorithms, which consists of known
-composition [@Rost2014vh]. The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic stable isotope-labeled standard (SIS) peptides in ten different dilution steps, spiked into three protein backgrounds of varying complexity (water, yeast and human), acquired in three technical replicates. The SGS dataset was manually annotated, resulting in 342 identified and quantified peptides with three or four transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated with one true peak group, whereas in 11,995 cases no peak was detected. See also http://www.openswath.org/openswath_data.html for details.
-
-# Sample preparation
 422 stable isotope-labeled standard (SIS) peptides (AAA-quantified, Sigma or Thermo) were
-pooled in a master sample of equal concentration. 10 two-fold dilution steps of the master sample were conducted, resulting in a 512-fold concentration range from 50 fmol/\(\mu\)L to 0.097 fmol/\(\mu\)L. 15 \(\mu\)L of each sample were spiked into 7.5\(\mu\)L of Hela cell lysate (human background), _Saccharomyces cerevisiae_ BY4741 (yeast background) or water (no background). All samples were finally supplemented with 2.5 \(\mu\)L of reference peptides (iRT-Kit, Biognosys AG) for retention time re-alignment, yielding a final sample volume of 25 \(\mu\)L.
+pooled in a master sample of equal concentration. Then 10 two-fold dilution steps (1, 2, 4, 8, .., 512 times) of the master sample were conducted, resulting in a 512-fold concentration range from 50 fmol/\(\mu\)L to 0.097 fmol/\(\mu\)L. 15 \(\mu\)L of each sample were spiked into 7.5\(\mu\)L of Hela cell lysate (human background), _Saccharomyces cerevisiae_ BY4741 (yeast background) or water (no background). All samples were finally supplemented with 2.5 \(\mu\)L of reference peptides (iRT-Kit, Biognosys AG) for retention time re-alignment, yielding a final sample volume of 25 \(\mu\)L. For each replicate, 2 \(\mu\)L of the samples were injected, yielding a final protein amount of 1 \(\mu\)L of Hela and yeast cell lysate, respectively, loaded on the HPLC column and SIS peptide amounts ranging from 60 fmol to 0.117 fmol. To prepare the spectral library, the most concentrated SIS peptide sample in water was measured in DDA mode.
 
+All samples were analyzed on an Eksigent nanoLC (AS-2/2D plut) system coupled with a SWATH-MS-enabled AB SCIEX TripleTOF 5600 System. For SWATH-MS data analysis, the mass spectrometer was operated using 32 __precursor isolation window__, each of 25 Da effective isolation width (with an addtitional 1 Da overlap on the left side of the window), starting at 400 m/z and ending at 1200 m/z. One full scan is recorded at the beginning for each cycle. Then by applying an acquisition time of 100 ms per scan for MS2, a total cycle time of ~3.3 s is achieved (399-425 m/z precursor isolation window for the first scan, 424-450 m/z for the second ... 1174-1200 m/z for the last scan). Each background has 3 experimental repeat, which leads to 90 different SWATH-MS runs [@Gillet2012vh].
+
+# Data Description    
+The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic stable isotope-labeled standard (SIS) peptides in ten two-fold dilution steps, spiked into three protein backgrounds of varying complexity (water, yeast and human), acquired in three technical replicates. The SGS dataset was manually annotated, resulting in 342 identified and quantified peptides with three or four transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated with one true peak group, whereas in 11,995 cases no peak was detected. See also http://www.openswath.org/openswath_data.html for details.
 
 # Importing data
 ## Load data

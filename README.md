@@ -1,4 +1,4 @@
-# msdata2: Labelled and Lable-Free Proteomics data for Benchmarking  
+  # msdata2: Labelled and Lable-Free Proteomics data for Benchmarking  
 
 The `msdata2` package contains a set of published identification/quantification proteomics datasets. The purpose of the package is to provide standard and curated datasets to facilitate the benchmarking of proteomics workflows. All the datasets in `msdata2` will be cleaned, formatted and compressed as [`MSnSet`](https://www.rdocumentation.org/packages/MSnbase/versions/1.20.7/topics/MSnSet-class) instances.  
 
