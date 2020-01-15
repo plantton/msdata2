@@ -2,21 +2,23 @@ library("MSnbase")
 library("readxl")
 library("dplyr")
 
+## Set workdir as the current path
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-  data.ramus <- "../extdata/1-s2.0-S187439191530186X-mmc1.xlsx"
+## read quantitative results
+dataRamus <- "../extdata/1-s2.0-S187439191530186X-mmc1.xlsx"
 
+## There's no value missing for spectral counting workflows: 1 - 4
+exdata1 <- read_xlsx(dataRamus, range = cell_rows(1:2728), sheet = 1)
+exdata2 <- read_xlsx(dataRamus, range = cell_rows(1:2803), sheet = 2)
+exdata3 <- read_xlsx(dataRamus, range = cell_rows(1:2976), sheet = 3)
+exdata4 <- read_xlsx(dataRamus, range = cell_rows(1:2381), sheet = 4)
+exdata5 <- read_xlsx(dataRamus, range = cell_rows(1:2722), sheet = 5)
+exdata6 <- read_xlsx(dataRamus, range = cell_rows(1:2645), sheet = 6)
+exdata7 <- read_xlsx(dataRamus, range = cell_rows(1:2626), sheet = 7)
+exdata8 <- read_xlsx(dataRamus, range = cell_rows(1:2620), sheet = 8)
 
-exdata.1 <- read_xlsx(data.ramus, sheet = 1)
-exdata.2 <- read_xlsx(data.ramus, sheet = 2)
-exdata.3 <- read_xlsx(data.ramus, range = cell_rows(1:2976), sheet = 3)
-exdata.4 <- read_xlsx(data.ramus, range = cell_rows(1:2381), sheet = 4)
-exdata.5 <- read_xlsx(data.ramus, range = cell_rows(1:2722), sheet = 5)
-exdata.6 <- read_xlsx(data.ramus, range = cell_rows(1:2645), sheet = 6)
-exdata.7 <- read_xlsx(data.ramus, range = cell_rows(1:2626), sheet = 7)
-exdata.8 <- read_xlsx(data.ramus, range = cell_rows(1:2620), sheet = 8)
-
-## Data 1: SC MFPaQ
-workflow1 <- readMSnSet2(file = exdata.1, ecol = 5:10)
+## Workflow 1: Spectral Counting - ExtractMSn, Mascot, MFPaQ
+workflow1 <- readMSnSet2(file = exdata1, ecol = 5:10)
 
 ## Experimental data
 ## Experiment info
@@ -42,8 +44,8 @@ e1 <- exprs(workflow1)
 
 ## Experiment info
 pd1 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
-                 Concentration.Level = c(rep('A',3),rep('B', 3)) ,
-                 Quantification.Method = "Spectral counting",
+                 ConcentrationLevel = c(rep('A',3),rep('B', 3)) ,
+                 QuantificationMethod = "Spectral counting",
                  row.names=colnames(e1))
 pd1 <- new("AnnotatedDataFrame", pd1)
 
@@ -73,7 +75,7 @@ stopifnot(dim(pData(ramus2016SCMfPaQ))[1] == ncol(e1),
           validObject(ramus2016SCMfPaQ))
 
 ## Data 2: SC MaxQuant
-workflow2 <- readMSnSet2(file = exdata.2, ecol = 5:10)
+workflow2 <- readMSnSet2(file = exdata2, ecol = 5:10)
 
 ## Experiment info
 experiment2 <- new("MIAPE",
@@ -98,8 +100,8 @@ e2 <- exprs(workflow2)
 
 ## Experiment info
 pd2 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
-                  Concentration.Level = c(rep('A',3),rep('B', 3)) ,
-                  Quantification.Method = "Spectral counting",
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)),
+                  QuantificationMethod = "Spectral counting",
                   row.names=colnames(e2))
 pd2 <- new("AnnotatedDataFrame", pd2)
 
@@ -130,7 +132,7 @@ stopifnot(dim(pData(ramus2016SCMaxQuant))[1] == ncol(e2),
 
 
 ## Data 3: SC Irma-Heidi
-workflow3 <- readMSnSet2(file = exdata.3, ecol = 5:10)
+workflow3 <- readMSnSet2(file = exdata3, ecol = 5:10)
 
 ## Experiment info
 experiment3 <- new("MIAPE",
@@ -155,8 +157,8 @@ e3 <- exprs(workflow3)
 
 ## Experiment info
 pd3 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
-                  Concentration.Level = c(rep('A',3),rep('B', 3)) ,
-                  Quantification.Method = "Spectral counting",
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)),
+                  QuantificationMethod = "Spectral counting",
                   row.names=colnames(e3))
 pd3 <- new("AnnotatedDataFrame", pd3)
 
@@ -187,7 +189,7 @@ stopifnot(dim(pData(ramus2016SCIrmaHeidi))[1] == ncol(e3),
 
 
 ## Data 4: SC Scaffold
-workflow4 <- readMSnSet2(file = exdata.4, ecol = 5:10)
+workflow4 <- readMSnSet2(file = exdata4, ecol = 5:10)
 
 ## Experiment info
 experiment4 <- new("MIAPE",
@@ -256,5 +258,25 @@ save(ramus2016SCScaffold, file="../../data/ramus2016SCScaffold.rda",
      compress = "xz", compression_level = 9)
 
 
+## Workflow 5 - 8
+## Quantification Method: MS signal analysis
 
+## Workflow 5: ExtractMSn/Mascot/MFPaQ/MS Signal analysis
+workflow5 <- readMSnSet2(file = exdata5, ecol = 11:16)
 
+## Expression data
+e5 <- exprs(workflow5)
+
+## Missingness in protein intensity values
+table(is.na(e5))  ## 107 missing values
+
+## Replace/impute the missing raw values by log-transformed values
+logE5 <- exdata5[,17:22]
+## Create imputation values by exponentiation of 2.
+impE5 <- 2^logE5
+## Missing value mask
+maskE5 <- is.na(e5)
+impE5[!maskE5] <- 0
+## Replace missing values with corresponding entries in impE5
+e5[is.na(e5)] <- 0
+e5 <- round(e5 + impE5, digits = 0)

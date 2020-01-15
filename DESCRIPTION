@@ -4,8 +4,7 @@ Title: Data accompanying the Benchmarking package
 Version: 0.5.0
 Author: Chong Tang
 Maintainer: Chong Tang <chong.tang@uclouvain.com>
-Description: Mass-spectrometry based spatial proteomics data sets and
-    protein complex separation data for benchmarking.
+Description: Labelled and Lable-Free Proteomics data for Benchmarking.
 Imports:
     Biobase,
     methods,

@@ -20,21 +20,22 @@ The package contains the following datasets:
         -  Label-free quantification:  
             *  Yeast + UPS1 spiked datasets X8  
             *  SWATH-MS Gold Standard Dataset 
-            *  OpenSWATH Spyogenes Dataset 
             
 To list all the datasets in the package, use `msdata2()`.  
 
-# Experimental Description
+# SWATH-MS Datasets
 In this vignette, I will use one of the datasets - [`SGS GOLD STANDARD DATASET`](http://compms.org/resources/reference-data/50)  (termed SGS for SWATH-MS
-Gold Standard) as the example, to demonstrate my package. The `SGS Dataset` was initially created to validate and benchmark SWATH-MS data analysis algorithms, which consists of known composition [@Rost2014vh].  
+Gold Standard) as the example, to demonstrate SWATH-MS datasets in `msdata2`. The `SGS Dataset` was manually created to validate and benchmark SWATH-MS data analysis algorithms, which consists of known composition [@Rost2014vh].  
 
-422 stable isotope-labeled standard (SIS) peptides (AAA-quantified, Sigma or Thermo) were
-pooled in a master sample of equal concentration. Then 10 two-fold dilution steps (1, 2, 4, 8, .., 512 times) of the master sample were conducted, resulting in a 512-fold concentration range from 50 fmol/\(\mu\)L to 0.097 fmol/\(\mu\)L. 15 \(\mu\)L of each sample were spiked into 7.5\(\mu\)L of Hela cell lysate (human background), _Saccharomyces cerevisiae_ BY4741 (yeast background) or water (no background). All samples were finally supplemented with 2.5 \(\mu\)L of reference peptides (iRT-Kit, Biognosys AG) for retention time re-alignment, yielding a final sample volume of 25 \(\mu\)L. For each replicate, 2 \(\mu\)L of the samples were injected, yielding a final protein amount of 1 \(\mu\)L of Hela and yeast cell lysate, respectively, loaded on the HPLC column and SIS peptide amounts ranging from 60 fmol to 0.117 fmol. To prepare the spectral library, the most concentrated SIS peptide sample in water was measured in DDA mode.
+### Data Description
+The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic stable isotope-labeled standard (SIS) peptides in ten two-fold dilution steps, spiked into three protein backgrounds of varying complexity (water, yeast and human), acquired in three technical replicates. The SGS dataset was manually annotated, resulting in 342 identified and quantified peptides with three or four transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated with one true peak group, whereas in 11,995 cases no peak was detected. See also http://www.openswath.org/openswath_data.html for details.  
 
-All samples were analyzed on an Eksigent nanoLC (AS-2/2D plut) system coupled with a SWATH-MS-enabled AB SCIEX TripleTOF 5600 System. For SWATH-MS data analysis, the mass spectrometer was operated using 32 __precursor isolation window__, each of 25 Da effective isolation width (with an addtitional 1 Da overlap on the left side of the window), starting at 400 m/z and ending at 1200 m/z. One full scan is recorded at the beginning for each cycle. Then by applying an acquisition time of 100 ms per scan for MS2, a total cycle time of ~3.3 s is achieved (399-425 m/z precursor isolation window for the first scan, 424-450 m/z for the second ... 1174-1200 m/z for the last scan). Each background has 3 experimental repeat, which leads to 90 different SWATH-MS runs [@Gillet2012vh].
 
-# Data Description    
-The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic stable isotope-labeled standard (SIS) peptides in ten two-fold dilution steps, spiked into three protein backgrounds of varying complexity (water, yeast and human), acquired in three technical replicates. The SGS dataset was manually annotated, resulting in 342 identified and quantified peptides with three or four transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated with one true peak group, whereas in 11,995 cases no peak was detected. See also http://www.openswath.org/openswath_data.html for details.
+### Experimental Design
+To create SGS Gold Standard Dataset, 422 stable isotope-labeled standard (SIS) peptides (AAA-quantified, Sigma or Thermo) were pooled in a master sample of equal concentration. Then 10 two-fold dilution steps (1, 2, 4, 8, .., 512 times) of the master sample were conducted, resulting in a 512-fold concentration range from 50 fmol/\(\mu\)L to 0.097 fmol/\(\mu\)L. 15 \(\mu\)L of each sample were spiked into 7.5\(\mu\)L of Hela cell lysate (human background), _Saccharomyces cerevisiae_ BY4741 (yeast background) or water (no background). All samples were finally supplemented with 2.5 \(\mu\)L of reference peptides (iRT-Kit, Biognosys AG) for retention time re-alignment, yielding a final sample volume of 25 \(\mu\)L. For each replicate, 2 \(\mu\)L of the samples were injected, yielding a final protein amount of 1 \(\mu\)L of Hela and yeast cell lysate, respectively, loaded on the HPLC column and SIS peptide amounts ranging from 60 fmol to 0.117 fmol. To prepare the spectral library, the most concentrated SIS peptide sample in water was measured in DDA mode.
+
+All samples were analyzed on an Eksigent nanoLC (AS-2/2D plut) system coupled with a SWATH-MS-enabled AB SCIEX TripleTOF 5600 System. For SWATH-MS data analysis, the mass spectrometer was operated using 32 __precursor isolation window__, each of 25 Da effective isolation width (with an addtitional 1 Da overlap on the left side of the window), starting at 400 m/z and ending at 1200 m/z. One full scan is recorded at the beginning for each cycle. Then by applying an acquisition time of 100 ms per scan for MS2, a total cycle time of ~3.3 s is achieved (399-425 m/z precursor isolation window for the first scan, 424-450 m/z for the second ... 1174-1200 m/z for the last scan). Each background has 3 experimental repeats, which leads to 90 different SWATH-MS runs [@Gillet2012vh].
+
 
 # Importing data
 ## Load data
@@ -42,23 +43,26 @@ The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 syn
 library(msdata2)
 ```
 ## Exploring the data
-Datasets in the package:
+Using building function `msdata2()`, we can list all datasets in the package: 
 ```{r, include=TRUE, warning = FALSE, message = FALSE}
 msdata2()
 ```
-Proteins in the experiment:
+We can also fetch the description of each dataset:
+```{r, include=TRUE, warning = FALSE, message = FALSE}
+data("Rost2014sgsHuman")
+?Rost2014sgsHuman
+```
+How many proteins have been identified by our experiment (e.g. Human background)?
 ```{r, include=TRUE, warning = FALSE, message = FALSE}
 unique(fData(Rost2014sgsHuman)$ProteinName)
 ```
-
-
-Filenames:
-
+The SGS datasets were created by stepwise dilutions. Can we also get to know the experimental workflow? For each sample, there are 10 dilution steps, each with 3 replicates, which corresponds to 30 different runs in total.  
 ```{r, include = TRUE, results = "asis"}
-library(msdata2)
 pander::pandoc.table(pData(Rost2014sgsHuman)[1:30,2:4], row.names = F)
 ```
-Data Visualization:
+
+### Data Visualization
+We can also explore the dataset structure with the help of accessible data visualization packages, and also the utilities given by `MSnbase`. I will use SGS dataset with human protein background to illustrate the functions.  
 ```{r, include = TRUE}
 library(ggplot2)
 library(reshape2)
@@ -69,6 +73,7 @@ Missingness plot in the expression data:
 ```{r, include=TRUE, fig.show='asis',fig.width=8, fig.height=8, warning = FALSE, message = FALSE}
 naplot(Rost2014sgsHuman)
 ```
+According to the plot given by `naplot` from `MSnbase` package, there're only 5 missing entries in our expression matrix. All the 5 missing values are belonging to the same peptide "HLDSSHPR".  
 
 #### Identification Accuracy
 To compute the identification accuracy, all results reported by mProphet above a certain cutoff were taken and it was counted how many of these results were false positive (no manual annotation present) or mis-identified (manual annotation present but at a different retention time, in our case further than 30 seconds away).
