@@ -3,7 +3,7 @@ Supplementary data files used to construct data sets
 #### Table of Contents
 - Quantitative Proteomics Data of Cancer Cell Line Encyclopedia
 - SWATH‐MS Data
-    - [SWATH-MS Gold Standard (SGS) dataset](#SWATH-MS Gold Standard (SGS) dataset)
+    - [SWATH-MS Gold Standard (SGS) dataset](#swath-ms-gold-standard-sgs-dataset)  
 - Other Label-Free Quantitative Data  
 
 ###### SWATH-MS Gold Standard (SGS) dataset
