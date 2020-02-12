@@ -214,8 +214,8 @@ e4 <- exprs(workflow4)
 
 ## Experiment info
 pd4 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
-                  Concentration.Level = c(rep('A',3),rep('B', 3)) ,
-                  Quantification.Method = "Spectral counting",
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)) ,
+                  QuantificationMethod = "Spectral counting",
                   row.names=colnames(e4))
 pd4 <- new("AnnotatedDataFrame", pd4)
 
@@ -261,7 +261,8 @@ save(ramus2016SCScaffold, file="../../data/ramus2016SCScaffold.rda",
 ## Workflow 5 - 8
 ## Quantification Method: MS signal analysis
 
-## Workflow 5: ExtractMSn/Mascot/MFPaQ/MS Signal analysis
+## Workflow 5: ExtractMSn/Mascot/MFPaQ/MFPaQ
+## MS signal extraction device - MFPaQ
 workflow5 <- readMSnSet2(file = exdata5, ecol = 11:16)
 
 ## Expression data
@@ -270,13 +271,249 @@ e5 <- exprs(workflow5)
 ## Missingness in protein intensity values
 table(is.na(e5))  ## 107 missing values
 
-## Replace/impute the missing raw values by log-transformed values
-logE5 <- exdata5[,17:22]
-## Create imputation values by exponentiation of 2.
-impE5 <- 2^logE5
-## Missing value mask
-maskE5 <- is.na(e5)
-impE5[!maskE5] <- 0
-## Replace missing values with corresponding entries in impE5
-e5[is.na(e5)] <- 0
-e5 <- round(e5 + impE5, digits = 0)
+## Experiment info
+experiment5 <- new("MIAPE",
+                   samples = list(
+                     species = c("Human","Yeast")
+                   ),
+                   title = "Benchmarking quantitative label-free LC-MS data processing workflows using a complex spiked proteomic standard dataset.",
+                   abstract = 'Proteomic workflows based on nanoLC-MS/MS data-dependent-acquisition analysis have progressed tremendously in recent years. High-resolution and fast sequencing instruments have enabled the use of label-free quantitative methods, based either on spectral counting or on MS signal analysis, which appear as an attractive way to analyze differential protein expression in complex biological samples. However, the computational processing of the data for label-free quantification still remains a challenge. Here, we used a proteomic standard composed of an equimolar mixture of 48 human proteins (Sigma UPS1) spiked at different concentrations into a background of yeast cell lysate to benchmark several label-free quantitative workflows, involving different software packages developed in recent years. This experimental design allowed to finely assess their performances in terms of sensitivity and false discovery rate, by measuring the number of true and false-positive (respectively UPS1 or yeast background proteins found as differential). The spiked standard dataset has been deposited to the ProteomeXchange repository with the identifier PXD001819 and can be used to benchmark other label-free workflows, adjust software parameter settings, improve algorithms for extraction of the quantitative metrics from raw MS data, or evaluate downstream statistical methods.
+                              BIOLOGICAL SIGNIFICANCE: Bioinformatic pipelines for label-free quantitative analysis must be objectively evaluated in their ability to detect variant proteins with good sensitivity and low false discovery rate in large-scale proteomic studies. This can be done through the use of complex spiked samples, for which the "ground truth" of variant proteins is known, allowing a statistical evaluation of the performances of the data processing workflow. We provide here such a controlled standard dataset and used it to evaluate the performances of several label-free bioinformatics tools (including MaxQuant, Skyline, MFPaQ, IRMa-hEIDI and Scaffold) in different workflows, for detection of variant proteins with different absolute expression levels and fold change values. The dataset presented here can be useful for tuning software tool parameters, and also testing new algorithms for label-free quantitative analysis, or for evaluation of downstream statistical methods.',
+                   pubMedIds = "26585461",
+                   instrumentModel = "LTQ Velos-Orbitrap",
+                   instrumentManufacturer = "ThermoScientific",
+                   ionSource = "ESI",
+                   analyser = "Orbitrap",
+                   detectorType = "Orbitrap",
+                   softwareName = c("ExtractMSn", "Mascot", "MFPaQ")
+)
+
+## Experiment info
+pd5 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)) ,
+                  QuantificationMethod = "MS signal analysis",
+                  row.names=colnames(e5))
+pd5 <- new("AnnotatedDataFrame", pd5)
+
+## feature data
+fd5 <- fData(workflow5)
+fd5 <- new("AnnotatedDataFrame", fd5)
+
+## The "MSnProcess" Class
+process5 <- new("MSnProcess",
+                processing=c(
+                  paste("Loaded on ",date(),".", sep=""),
+                  paste("No Normalisation")),
+                normalised=FALSE)
+
+
+##
+ramus2016IntMFPaQ <- new("MSnSet",
+                           exprs = e5,
+                           phenoData = pd5,
+                           experimentData = experiment5,
+                           featureData = fd5,
+                           processingData = process5)
+
+stopifnot(dim(pData(ramus2016IntMFPaQ))[1] == ncol(e5),
+          dim(fData(ramus2016IntMFPaQ))[1] == nrow(e5),
+          validObject(ramus2016IntMFPaQ))
+
+
+## Workflow 6: Andromeda/Andromeda/MaxQuant/MaxQuant(Intensity)
+## MS signal extraction device - MaxQuant (Intensity)
+workflow6 <- readMSnSet2(file = exdata6, ecol = 12:17)
+
+## Expression data
+e6 <- exprs(workflow6)
+
+## Missingness in protein intensity values
+table(is.na(e6))  ## 579 missing values
+
+## Experiment info
+experiment6 <- new("MIAPE",
+                   samples = list(
+                     species = c("Human","Yeast")
+                   ),
+                   title = "Benchmarking quantitative label-free LC-MS data processing workflows using a complex spiked proteomic standard dataset.",
+                   abstract = 'Proteomic workflows based on nanoLC-MS/MS data-dependent-acquisition analysis have progressed tremendously in recent years. High-resolution and fast sequencing instruments have enabled the use of label-free quantitative methods, based either on spectral counting or on MS signal analysis, which appear as an attractive way to analyze differential protein expression in complex biological samples. However, the computational processing of the data for label-free quantification still remains a challenge. Here, we used a proteomic standard composed of an equimolar mixture of 48 human proteins (Sigma UPS1) spiked at different concentrations into a background of yeast cell lysate to benchmark several label-free quantitative workflows, involving different software packages developed in recent years. This experimental design allowed to finely assess their performances in terms of sensitivity and false discovery rate, by measuring the number of true and false-positive (respectively UPS1 or yeast background proteins found as differential). The spiked standard dataset has been deposited to the ProteomeXchange repository with the identifier PXD001819 and can be used to benchmark other label-free workflows, adjust software parameter settings, improve algorithms for extraction of the quantitative metrics from raw MS data, or evaluate downstream statistical methods.
+                              BIOLOGICAL SIGNIFICANCE: Bioinformatic pipelines for label-free quantitative analysis must be objectively evaluated in their ability to detect variant proteins with good sensitivity and low false discovery rate in large-scale proteomic studies. This can be done through the use of complex spiked samples, for which the "ground truth" of variant proteins is known, allowing a statistical evaluation of the performances of the data processing workflow. We provide here such a controlled standard dataset and used it to evaluate the performances of several label-free bioinformatics tools (including MaxQuant, Skyline, MFPaQ, IRMa-hEIDI and Scaffold) in different workflows, for detection of variant proteins with different absolute expression levels and fold change values. The dataset presented here can be useful for tuning software tool parameters, and also testing new algorithms for label-free quantitative analysis, or for evaluation of downstream statistical methods.',
+                   pubMedIds = "26585461",
+                   instrumentModel = "LTQ Velos-Orbitrap",
+                   instrumentManufacturer = "ThermoScientific",
+                   ionSource = "ESI",
+                   analyser = "Orbitrap",
+                   detectorType = "Orbitrap",
+                   softwareName = c("Andromeda", "Andromeda", "MaxQuant")
+)
+
+## Experiment info
+pd6 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)) ,
+                  QuantificationMethod = "MS signal analysis",
+                  row.names=colnames(e6))
+pd6 <- new("AnnotatedDataFrame", pd6)
+
+## feature data
+fd6 <- fData(workflow6)
+fd6 <- new("AnnotatedDataFrame", fd6)
+
+## The "MSnProcess" Class
+process6 <- new("MSnProcess",
+                processing=c(
+                  paste("Loaded on ",date(),".", sep=""),
+                  paste("No Normalisation")),
+                normalised=FALSE)
+
+##
+ramus2016IntMaxQuant<- new("MSnSet",
+                         exprs = e6,
+                         phenoData = pd6,
+                         experimentData = experiment6,
+                         featureData = fd6,
+                         processingData = process6)
+
+stopifnot(dim(pData(ramus2016IntMaxQuant))[1] == ncol(e6),
+          dim(fData(ramus2016IntMaxQuant))[1] == nrow(e6),
+          validObject(ramus2016IntMaxQuant))
+
+## Workflow 7: Andromeda/Andromeda/MaxQuant/MaxQuant(LFQ)
+## MS signal extraction device - MaxQuant (LFQ)
+workflow7 <- readMSnSet2(file = exdata7, ecol = 12:17)
+
+## Expression data
+e7 <- exprs(workflow7)
+
+## Missingness in protein intensity values
+table(is.na(e7))  ## 611 missing values
+
+## Experiment info
+experiment7 <- new("MIAPE",
+                   samples = list(
+                     species = c("Human","Yeast")
+                   ),
+                   title = "Benchmarking quantitative label-free LC-MS data processing workflows using a complex spiked proteomic standard dataset.",
+                   abstract = 'Proteomic workflows based on nanoLC-MS/MS data-dependent-acquisition analysis have progressed tremendously in recent years. High-resolution and fast sequencing instruments have enabled the use of label-free quantitative methods, based either on spectral counting or on MS signal analysis, which appear as an attractive way to analyze differential protein expression in complex biological samples. However, the computational processing of the data for label-free quantification still remains a challenge. Here, we used a proteomic standard composed of an equimolar mixture of 48 human proteins (Sigma UPS1) spiked at different concentrations into a background of yeast cell lysate to benchmark several label-free quantitative workflows, involving different software packages developed in recent years. This experimental design allowed to finely assess their performances in terms of sensitivity and false discovery rate, by measuring the number of true and false-positive (respectively UPS1 or yeast background proteins found as differential). The spiked standard dataset has been deposited to the ProteomeXchange repository with the identifier PXD001819 and can be used to benchmark other label-free workflows, adjust software parameter settings, improve algorithms for extraction of the quantitative metrics from raw MS data, or evaluate downstream statistical methods.
+                              BIOLOGICAL SIGNIFICANCE: Bioinformatic pipelines for label-free quantitative analysis must be objectively evaluated in their ability to detect variant proteins with good sensitivity and low false discovery rate in large-scale proteomic studies. This can be done through the use of complex spiked samples, for which the "ground truth" of variant proteins is known, allowing a statistical evaluation of the performances of the data processing workflow. We provide here such a controlled standard dataset and used it to evaluate the performances of several label-free bioinformatics tools (including MaxQuant, Skyline, MFPaQ, IRMa-hEIDI and Scaffold) in different workflows, for detection of variant proteins with different absolute expression levels and fold change values. The dataset presented here can be useful for tuning software tool parameters, and also testing new algorithms for label-free quantitative analysis, or for evaluation of downstream statistical methods.',
+                   pubMedIds = "26585461",
+                   instrumentModel = "LTQ Velos-Orbitrap",
+                   instrumentManufacturer = "ThermoScientific",
+                   ionSource = "ESI",
+                   analyser = "Orbitrap",
+                   detectorType = "Orbitrap",
+                   softwareName = c("Andromeda", "Andromeda", "MaxQuant")
+)
+
+## Experiment info
+pd7 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)) ,
+                  QuantificationMethod = "MS signal analysis",
+                  row.names=colnames(e7))
+pd7 <- new("AnnotatedDataFrame", pd7)
+
+## feature data
+fd7 <- fData(workflow7)
+fd7 <- new("AnnotatedDataFrame", fd7)
+
+## The "MSnProcess" Class
+process7 <- new("MSnProcess",
+                processing=c(
+                  paste("Loaded on ",date(),".", sep=""),
+                  paste("No Normalisation")),
+                normalised=FALSE)
+
+##
+ramus2016LFQMaxQuant<- new("MSnSet",
+                           exprs = e7,
+                           phenoData = pd7,
+                           experimentData = experiment7,
+                           featureData = fd7,
+                           processingData = process7)
+
+stopifnot(dim(pData(ramus2016LFQMaxQuant))[1] == ncol(e7),
+          dim(fData(ramus2016LFQMaxQuant))[1] == nrow(e7),
+          validObject(ramus2016LFQMaxQuant))
+
+
+## Workflow 8: Mascot Distiller/Mascot/Scaffold/Skyline
+## MS signal extraction device - Skyline
+workflow8 <- readMSnSet2(file = exdata8, ecol = 21:26)
+
+## Expression data
+e8 <- exprs(workflow8)
+
+## Missingness in protein intensity values
+table(is.na(e8))  ## 0 missing values
+
+## Experiment info
+experiment8 <- new("MIAPE",
+                   samples = list(
+                     species = c("Human","Yeast")
+                   ),
+                   title = "Benchmarking quantitative label-free LC-MS data processing workflows using a complex spiked proteomic standard dataset.",
+                   abstract = 'Proteomic workflows based on nanoLC-MS/MS data-dependent-acquisition analysis have progressed tremendously in recent years. High-resolution and fast sequencing instruments have enabled the use of label-free quantitative methods, based either on spectral counting or on MS signal analysis, which appear as an attractive way to analyze differential protein expression in complex biological samples. However, the computational processing of the data for label-free quantification still remains a challenge. Here, we used a proteomic standard composed of an equimolar mixture of 48 human proteins (Sigma UPS1) spiked at different concentrations into a background of yeast cell lysate to benchmark several label-free quantitative workflows, involving different software packages developed in recent years. This experimental design allowed to finely assess their performances in terms of sensitivity and false discovery rate, by measuring the number of true and false-positive (respectively UPS1 or yeast background proteins found as differential). The spiked standard dataset has been deposited to the ProteomeXchange repository with the identifier PXD001819 and can be used to benchmark other label-free workflows, adjust software parameter settings, improve algorithms for extraction of the quantitative metrics from raw MS data, or evaluate downstream statistical methods.
+                              BIOLOGICAL SIGNIFICANCE: Bioinformatic pipelines for label-free quantitative analysis must be objectively evaluated in their ability to detect variant proteins with good sensitivity and low false discovery rate in large-scale proteomic studies. This can be done through the use of complex spiked samples, for which the "ground truth" of variant proteins is known, allowing a statistical evaluation of the performances of the data processing workflow. We provide here such a controlled standard dataset and used it to evaluate the performances of several label-free bioinformatics tools (including MaxQuant, Skyline, MFPaQ, IRMa-hEIDI and Scaffold) in different workflows, for detection of variant proteins with different absolute expression levels and fold change values. The dataset presented here can be useful for tuning software tool parameters, and also testing new algorithms for label-free quantitative analysis, or for evaluation of downstream statistical methods.',
+                   pubMedIds = "26585461",
+                   instrumentModel = "LTQ Velos-Orbitrap",
+                   instrumentManufacturer = "ThermoScientific",
+                   ionSource = "ESI",
+                   analyser = "Orbitrap",
+                   detectorType = "Orbitrap",
+                   softwareName = c("Mascor Distiller", "Mascot", "Scaffold")
+)
+
+## Experiment info
+pd8 <- data.frame(Replicate = c(seq(1,3),seq(1,3)),
+                  ConcentrationLevel = c(rep('A',3),rep('B', 3)) ,
+                  QuantificationMethod = "MS signal analysis",
+                  row.names=colnames(e8))
+pd8 <- new("AnnotatedDataFrame", pd8)
+
+## feature data
+fd8 <- fData(workflow8)
+fd8 <- new("AnnotatedDataFrame", fd8)
+
+## The "MSnProcess" Class
+process8 <- new("MSnProcess",
+                processing=c(
+                  paste("Loaded on ",date(),".", sep=""),
+                  paste("No Normalisation")),
+                normalised=FALSE)
+
+##
+ramus2016IntSkyline<- new("MSnSet",
+                           exprs = e8,
+                           phenoData = pd8,
+                           experimentData = experiment8,
+                           featureData = fd8,
+                           processingData = process8)
+
+stopifnot(dim(pData(ramus2016IntSkyline))[1] == ncol(e8),
+          dim(fData(ramus2016IntSkyline))[1] == nrow(e8),
+          validObject(ramus2016IntSkyline))
+
+## For Spectral Sounting data, only raw data provided.
+save(ramus2016IntMFPaQ, file="../../data/ramus2016IntMFPaQ.rda",
+     compress = "xz", compression_level = 9)
+
+save(ramus2016IntMaxQuant, file="../../data/ramus2016IntMaxQuant.rda",
+     compress = "xz", compression_level = 9)
+
+save(ramus2016LFQMaxQuant, file="../../data/ramus2016LFQMaxQuant.rda",
+     compress = "xz", compression_level = 9)
+
+save(ramus2016IntSkyline, file="../../data/ramus2016IntSkyline.rda",
+     compress = "xz", compression_level = 9)
+
+
+## Data cleaning for MSnSet generated from MS signal analysis
+library(tidyverse)
+
+## clean dataset from workflow 5
+e5 <- exprs(ramus2016IntMFPaQ)
+
+##
+class(e5)
+dim(e5)
+pData(ramus2016IntMFPaQ)
+glimpse(e5)

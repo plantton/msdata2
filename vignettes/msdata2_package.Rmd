@@ -23,6 +23,9 @@ The package contains the following datasets:
             
 To list all the datasets in the package, use `msdata2()`.  
 
+# Handling raw data
+The raw MS data in `msdata2` are handled by package `Spectra`. 
+
 # SWATH-MS Datasets
 In this vignette, I will use one of the datasets - [`SGS GOLD STANDARD DATASET`](http://compms.org/resources/reference-data/50)  (termed SGS for SWATH-MS
 Gold Standard) as the example, to demonstrate SWATH-MS datasets in `msdata2`. The `SGS Dataset` was manually created to validate and benchmark SWATH-MS data analysis algorithms, which consists of known composition [@Rost2014vh].  

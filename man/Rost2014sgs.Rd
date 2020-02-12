@@ -17,13 +17,15 @@ data(Rost2014sgsYeast)
 data(Rost2014sgsWater)
 }
 \description{
-The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422 synthetic
-stable isotope-labeled standard (SIS) peptides in ten different dilution steps (1, 2, 4,
-8, ..., 512 times), spiked into three protein backgrounds of varying complexity (water,
-yeast and human), acquired in three technical replicates. The SGS dataset was manually
-annotated, resulting in 342 identified and quantified peptides with three or four
-transitions each. In total, 30,780 chromatograms were inspected and 18,785 were annotated
-with one true peak group, whereas in 11,995 cases no peak was detected.
+The SWATH-MS Gold Standard (SGS) dataset consists of 90 SWATH-MS runs of 422
+synthetic stable isotope-labeled standard (SIS) peptides in ten different
+dilution steps (1, 2, 4, 8, ..., 512 times), spiked into three protein
+backgrounds of varying complexity (water, yeast and human), acquired in
+three technical replicates. The SGS dataset was manually annotated,
+resulting in 342 identified and quantified peptides with three or four
+transitions each. In total, 30,780 chromatograms were inspected and 18,785
+were annotated with one true peak group, whereas in 11,995 cases no peak was
+detected.
 
 See also http://www.openswath.org/openswath_data.html for details.
 }

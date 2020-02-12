@@ -1,7 +1,14 @@
 Supplementary data files used to construct data sets
 
-# From Röst et al 2014
-Reference:  
+#### Table of Contents
+- Quantitative Proteomics Data of Cancer Cell Line Encyclopedia
+- SWATH‐MS Data
+    - [SWATH-MS Gold Standard (SGS) dataset](#SWATH-MS Gold Standard (SGS) dataset)
+- Other Label-Free Quantitative Data  
+
+###### SWATH-MS Gold Standard (SGS) dataset
+From Röst et al 2014  
+Reference:   
 Röst, H., Rosenberger, G., Navarro, P. et al. OpenSWATH enables automated, targeted analysis of data-independent acquisition MS data. Nat Biotechnol 32, 219–223 (2014) doi:10.1038/nbt.2841  
 `DOI`: [https://doi.org/10.1038/nbt.2841](https://doi.org/10.1038/nbt.2841)  
 
