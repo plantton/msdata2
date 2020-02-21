@@ -1,11 +1,11 @@
 ---
-title: "msdata2 package"
+title: "msdata2: Package Manual"
 author: "Chong Tang"
 output: [html_document, pdf_document]
 bibliography: bibliography.bib
 csl: bioinformatics.csl
 vignette: >
-  %\VignetteIndexEntry{msdata2}
+  %\VignetteIndexEntry{msdata2: Package Manual}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

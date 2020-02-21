@@ -1,0 +1,54 @@
+---
+title: "msdata2: Data Reference"
+author: "Chong Tang"
+output: 
+    pdf_document:
+      toc: true
+      latex_engine: pdflatex
+    html_document:
+      toc: true
+      toc_depth: 2
+      code_folding: show
+bibliography: bibliography.bib
+csl: bioinformatics.csl
+vignette: >
+  %\VignetteIndexEntry{msdata2: Data Reference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Overview
+The `msdata2` data package provides both raw mass spectrometry data 
+and quantitative data to the users. The datasets are selected for the 
+purpose of benchmarking different proteomics workflows. Hence miscellaneous 
+proteomics datasets are included in `msdata2`, to represent the diversity 
+among different proteomics workflows.
+
+The aim of this reference is to help users understand the diverse data 
+resources included in `msdata2`. Since all the datasets in `msdata2` 
+are downloaded from published results, the reference will also be divided into
+different parts, on the basis of each unique experiments/projects/publications.
+Within each part, the research backgrounds, experimental design, implemented
+proteomics methods and formatted data structures will be briefly introduced. 
+
+The detailed user case of `msdata2` will be explained in another vignette, 
+msdata2 manual. This manual will also demonstrate the methods used to clean and
+format all the datasets in `msdata2`. Moreover, the visualization methods will also
+be explained in this manual. 
+
+Brief documentation for each dataset are also recorded in help files. Users can follow
+the examples in help files to manipulate the datasets.
+
+# Quantitative Proteomics of the Cancer Cell Line Encyclopedia
+The first group of datasets are quantitative proteomic profiling from Cancer Cell
+Line Encyclopedia (CCLE). The Cancer Cell Line Encyclopedia is a database of gene expression, genotype, and drug sensitivity data for human cancer cell lines. These quantitative proteomics datasets expanded CCLE through quantitative profiling of thousands of proteins by mass spectrometry across 375 cell lines from diverse lineages to reveal information undiscovered by DNA and RNA methods [@NUSINOW2020387].
+
+## Experimental Design
+The quantitative proteomic experiments were performed in a multiplex setup 
+using a reagent named Tandem Mass Tags (TMT, Figure 1) that, at the start of 
+the project, allowed 10 samples to be run in parallel on the mass spectrometer [@Nusinow2020.02.03.932384].
+
+![__Multiplexed Proteome Analysis by TMT__. Tryptic peptides were isolated from nine cell lines and the bridge sample and separately labeled with the TMT-10 reagents (top). Labeled peptides were combined and analyzed by LC-MS. The TMT reporter variants are isobaric, and thus coelute during chromatography and only show a single convoluted peak during MS analysis (bottom right) and multiple convoluted peaks during peptide sequencing via MS/MS (bottom middle). Upon MS2 fragment peak isolation for MS3 analysis (grey boxes in bottom middle) the TMT reporter fragments are deconvoluted and quantitative values can be read (bottom left) [@Nusinow2020.02.03.932384].](./F1_Ref.jpg)
+
+
+# References
+  

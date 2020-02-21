@@ -6,7 +6,7 @@ Supplementary data files used to construct data sets
     - [SWATH-MS Gold Standard (SGS) dataset](#swath-ms-gold-standard-sgs-dataset)  
 - Other Label-Free Quantitative Data  
 
-###### SWATH-MS Gold Standard (SGS) dataset
+#### SWATH-MS Gold Standard (SGS) dataset
 From Röst et al 2014  
 Reference:   
 Röst, H., Rosenberger, G., Navarro, P. et al. OpenSWATH enables automated, targeted analysis of data-independent acquisition MS data. Nat Biotechnol 32, 219–223 (2014) doi:10.1038/nbt.2841  
