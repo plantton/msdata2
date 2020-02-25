@@ -15,7 +15,7 @@ devtools::install_github("UCLouvain-CBIO/msdata2")
 
 ## Available data sets  
 
-Currently, there are 1 datasets available in `msdata2`.
+
 
 
 ## Data set description
